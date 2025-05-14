@@ -3,20 +3,19 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "hertz/user";
+option go_package = "user";
 
-import "api.proto";
-
-message HelloReq {
-   string Name = 1[(api.query)="name"];
+message UserCreateReq {
+   string UserName = 1;
+   string Password = 2;
+   string Email = 3;
 }
 
-message HelloResp {
-   string RespBody = 1;
+message UserCreateResp {
+   string token = 1;
+   string err = 2;
 }
 
-service HelloService {
-   rpc Method1(HelloReq) returns(HelloResp) {
-      option (api.get) = "/hello";
-   }
+service UserService {
+   rpc UserCreate(UserCreateReq) returns(UserCreateResp) ;
 }
