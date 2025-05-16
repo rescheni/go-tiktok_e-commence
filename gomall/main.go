@@ -1,6 +1,7 @@
 package main
 
 import (
+	"e-commence/gomall/biz/dal/mysql"
 	"log"
 	"net"
 	"time"
@@ -22,6 +23,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+	// DB
+	mysql.Init()
 
 	// default
 	opts := kitexInit()

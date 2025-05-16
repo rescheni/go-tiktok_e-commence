@@ -1,6 +1,8 @@
 package mysql
 
 import (
+	"e-commence/gomall/biz/dal/model"
+	"fmt"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -13,7 +15,7 @@ var (
 )
 
 func Init() {
-	dsn := os.Getenv("MYSQL_DSN")
+	dsn := os.Getenv("GOMALL_MYSQL_DSN")
 	DB, err = gorm.Open(mysql.Open(dsn),
 		&gorm.Config{
 			PrepareStmt:            true,
@@ -23,4 +25,9 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+	err := DB.AutoMigrate(&model.User{})
+	if err != nil {
+		return
+	}
+	fmt.Printf("%#v\n", DB.Debug().Exec("SHOW TABLES"))
 }
