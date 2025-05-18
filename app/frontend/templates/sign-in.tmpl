@@ -1,0 +1,45 @@
+{{define "sign-in"}}
+{{template "header" .}}
+<div class="row justify-content-center">
+    <div class="col-3">
+        <img src="https://api.paugram.com/wallpaper/" sizes="100vw" class="img-fluid rounded-start mt-4">
+        <br>
+        <br>
+        <form class="mb-4" action="/auth/login?next={{.Next}}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">UserName {{template "red*"}} </label>
+            <input type="text" class="form-control" id="username" name="username">
+            <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+        </div>
+        <!-- <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div> -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password {{template "red*"}} </label>
+            <input type="password" class="form-control" id="password" name="password">  
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="RememberMe" name="remember">
+            <label class="form-check-label" for="checkbox">Remember me</label>
+        </div>
+
+        <div class="text-center">
+            <!-- <hr> -->
+            没有账号 点我注册 <a href="/sign-up">Sign Up</a>
+            <br>
+            <button type="submit" class="btn btn-primary mb-2 mt-2 px-5">登录</button>
+            <br>
+            <!-- TODO:  忘记密码 -->
+            <a href="/auth/forgot-password">忘记密码</a>
+        </div>
+        
+
+    </form>
+    </div>
+
+</div>
+
+{{template "footer" .}}
+{{end}}

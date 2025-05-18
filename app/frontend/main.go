@@ -4,24 +4,38 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"gomall/biz/router"
 	"gomall/conf"
+	"gomall/middleware"
 
+	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/hertz/pkg/common/utils"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/cors"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
 	"github.com/hertz-contrib/pprof"
+	"github.com/hertz-contrib/sessions"
+	"github.com/hertz-contrib/sessions/redis"
+	"github.com/joho/godotenv"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
+	// 加载环境变量
+	err := godotenv.Load()
+	if err != nil {
+		hlog.Fatalf("Error loading .env file")
+	}
+
 	// init dal
 	// dal.Init()
 	address := conf.GetConf().Hertz.Address
@@ -36,10 +50,39 @@ func main() {
 
 	router.GeneratedRegister(h)
 	h.LoadHTMLGlob("templates/*")
+
+	// about
+	h.GET("/about", func(c context.Context, ctx *app.RequestContext) {
+		ctx.HTML(consts.StatusOK, "about", utils.H{
+			"Title": "关于我们",
+			"Icon":  "https://api.paugram.com/wallpaper/",
+		})
+	})
+
+	// 用户登录页面
+	h.GET("/sign-in", func(c context.Context, ctx *app.RequestContext) {
+		ctx.HTML(consts.StatusOK, "sign-in", utils.H{
+			"Title": "登录",
+			"Icon":  "https://api.paugram.com/wallpaper/",
+			"Next":  ctx.Query("next"), // 访问地址
+		})
+	})
+	h.GET("/sign-up", func(c context.Context, ctx *app.RequestContext) {
+		ctx.HTML(consts.StatusOK, "sign-up", utils.H{
+			"Title": "注册",
+			"Icon":  "https://api.paugram.com/wallpaper/",
+		})
+	})
+
 	h.Spin()
 }
 
 func registerMiddleware(h *server.Hertz) {
+
+	// session
+	store, _ := redis.NewStore(10, "tcp", conf.GetConf().Redis.Address, "", []byte(os.Getenv("SESSION_SECRET")))
+	h.Use(sessions.New("gomall", store))
+
 	// log
 	logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
@@ -78,4 +121,6 @@ func registerMiddleware(h *server.Hertz) {
 
 	// cores
 	h.Use(cors.Default())
+
+	middleware.Register(h)
 }

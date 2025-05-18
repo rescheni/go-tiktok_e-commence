@@ -18,9 +18,10 @@
   <header>
     <!-- navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
+      <!-- <div class="container-fluid"> -->
+      <div class="container">
         <!-- <a class="navbar-brand" href="#">LOGO</a> -->
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
           <img src="{{.Icon}}" style="height: 2em" />
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -30,7 +31,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <!-- <li class="nav-item">
               <a class="nav-link" href="#">Link</a>
@@ -54,7 +55,7 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
+              <a class="nav-link" href="/about">About</a>
             </li>
           </ul>
           <form class="d-flex" role="search">
@@ -63,23 +64,42 @@
               Search
             </button>
           </form>
+          
           <div class="ms-3">
             <a href="#">
               <i class="fa-solid fa-cart-shopping fa-xl"></i>
             </a>
           </div>
+          {{if .user_id }}
           <div class="ms-3">
-            <a href="#">
-              <i class="fa-solid fa-circle-user fa-xl"></i>
-            </a>
+
+            <div class="dropdown">
+              <a class="btn btn-secondary dropdown-toggle bg-transparent border-0 py-2  text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- <a href="#"> -->
+                <i class="fa-solid fa-circle-user fa-xl"></i>
+                <span>Name</span>
+              </a>
+              </a>
+
+              <ul class="dropdown-menu dropdown-menu-end" style="min-width: 6rem;">
+                  
+                <li><a class="dropdown-item" href="#">订单中心</a></li>
+                <form  action="/auth/logout" method="post">
+                  <li><button class="dropdown-item" href="/auth/logout" type="submit">Logout</button></li>
+                </form>
+              </ul>
+            </div>
           </div>
-          <button type="button" class="btn btn-light">Sign In</button>
+          {{else }}
+          <a type="button" class="btn btn-light" href="/sign-in">Sign In</a>
+          {{end}}
         </div>
       </div>
     </nav>
     <!-- end-nvrbar  -->
   </header>
   <!-- header -->
-  <main>
-    <div class="container-fluid">
+  <main class="min-vh-100">
+    <div class="container-fluid py-4">
+      
 {{end}}

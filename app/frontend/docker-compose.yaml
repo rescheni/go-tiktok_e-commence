@@ -1,15 +1,36 @@
-version: '3'
+#services:
+#  mysql:
+#    image: 'mysql:latest'
+#    ports:
+#      - 3306:3306
+#    environment:
+#      - MYSQL_DATABASE=gorm
+#      - MYSQL_USER=gorm
+#      - MYSQL_PASSWORD=gorm
+#      - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+#  redis:
+#    image: 'redis:latest'
+#    ports:
+#      - 6379:6379
+#  consul:
+#    image: 'hashicorp/consul'
+#    ports:
+#      - 8500:8500
 services:
   mysql:
     image: 'mysql:latest'
     ports:
-      - 3306:3306
+      - ${GOMALL_MYSQL_PORT}:3306
     environment:
-      - MYSQL_DATABASE=gorm
-      - MYSQL_USER=gorm
-      - MYSQL_PASSWORD=gorm
-      - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+      - MYSQL_DATABASE=${GOMALL_MYSQL_DATABASE}
+      - MYSQL_USER=${GOMALL_MYSQL_USER}
+      - MYSQL_PASSWORD=${GOMALL_MYSQL_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD= "yes"
   redis:
     image: 'redis:latest'
     ports:
-      - 6379:6379
+      - ${GOMALL_REDIS_PORT}:6379
+  consul:
+    image: 'hashicorp/consul'
+    ports:
+      - ${GOMALL_CONSUL_PORT}:8500

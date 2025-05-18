@@ -1,0 +1,38 @@
+{{define "sign-up"}}
+{{template "header" .}}
+<div class="row justify-content-center">
+    <div class="col-3">
+        <form action="/auth/register?next={{.Next}}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">UserName {{template "red*"}} </label>
+            <input type="text" class="form-control" id="username" name="username">
+            <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address {{template "red*"}}</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" >
+            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password {{template "red*"}} </label>
+            <input type="password" class="form-control" id="password" name="password">  
+        </div>
+        <div class="mb-3">
+            <label for="check_password" class="form-label">check Password {{template "red*"}} </label>
+            <input type="password" class="form-control" id="check_password" name="check_password">  
+        </div>  
+        <div class="text-center">
+            <hr>
+            有账号 点我登录 <a href="/sign-in">Sign In</a>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mb-2 mt-2 px-5" >注册</button>
+        </div>
+
+    </form>
+    </div>
+
+</div>
+
+{{template "footer" .}}
+{{end}}

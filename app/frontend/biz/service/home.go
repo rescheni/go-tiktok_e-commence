@@ -2,9 +2,8 @@ package service
 
 import (
 	"context"
+	common "gomall/hertz_gen/frontend/common"
 	"time"
-
-	home "gomall/hertz_gen/frontend/home"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -19,7 +18,7 @@ func NewHomeService(Context context.Context, RequestContext *app.RequestContext)
 }
 
 // func (h *HomeService) Run(req *home.Empty) (resp *home.Empty, err error) {
-func (h *HomeService) Run(req *home.Empty) (resp map[string]any, err error) {
+func (h *HomeService) Run(req *common.Empty) (resp map[string]any, err error) {
 	//defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
@@ -29,19 +28,19 @@ func (h *HomeService) Run(req *home.Empty) (resp map[string]any, err error) {
 	resp = make(map[string]any)
 
 	items := []map[string]any{
-		{"Name": "黄金", "Price": 1000, "Picture": "http://image.reschen.cn:88/random/pa"},
-		{"Name": "石油", "Price": 100, "Picture": "http://image.reschen.cn:88/random/pb"},
-		{"Name": "白银", "Price": 80, "Picture": "http://image.reschen.cn:88/random/pc"},
-		{"Name": "铂金", "Price": 200, "Picture": "http://image.reschen.cn:88/random/pd"},
-		{"Name": "奢侈品", "Price": 9999, "Picture": "http://image.reschen.cn:88/random/pe"},
-		{"Name": "汽车", "Price": 9100000, "Picture": "http://image.reschen.cn:88/random/pf"},
-		{"Name": "房子", "Price": 10000, "Picture": "http://image.reschen.cn:88/random/pg"},
-		{"Name": "飞机", "Price": 100000, "Picture": "http://image.reschen.cn:88/random/ph"},
-		{"Name": "游艇", "Price": 1000000, "Picture": "http://image.reschen.cn:88/random/pi"},
+		{"Name": "黄金", "Price": 1000, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "石油", "Price": 100, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "白银", "Price": 80, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "铂金", "Price": 200, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "奢侈品", "Price": 9999, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "汽车", "Price": 9100000, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "房子", "Price": 10000, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "飞机", "Price": 100000, "Picture": "https://api.paugram.com/wallpaper/"},
+		{"Name": "游艇", "Price": 1000000, "Picture": "https://api.paugram.com/wallpaper/"},
 	}
 	resp["Items"] = items
 	resp["Title"] = "首页"
-	resp["Icon"] = "http://image.reschen.cn:88/random/pa"
+	resp["Icon"] = "https://api.paugram.com/wallpaper/"
 	resp["footerTime"] = time.Now().Format("2006")
 
 	return
