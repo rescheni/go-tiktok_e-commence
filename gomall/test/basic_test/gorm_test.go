@@ -2,12 +2,14 @@ package basic
 
 import (
 	"fmt"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 	"log"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type test_table struct {
@@ -18,6 +20,11 @@ type test_table struct {
 }
 
 func gorm_init() *gorm.DB {
+
+	err := godotenv.Load("../../.env")
+	if err != nil {
+	}
+
 	DB, err := gorm.Open(mysql.Open(os.Getenv("GOMALL_MYSQL_DSN")),
 		&gorm.Config{
 			PrepareStmt:            true,

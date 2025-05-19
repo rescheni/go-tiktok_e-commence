@@ -4,12 +4,12 @@ package main
 
 import (
 	"context"
-	"os"
-	"time"
-
 	"gomall/biz/router"
 	"gomall/conf"
+	"gomall/infra/rpc"
 	"gomall/middleware"
+	"os"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -36,6 +36,8 @@ func main() {
 		hlog.Fatalf("Error loading .env file")
 	}
 
+	// init rpc
+	rpc.Init()
 	// init dal
 	// dal.Init()
 	address := conf.GetConf().Hertz.Address

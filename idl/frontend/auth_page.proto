@@ -10,16 +10,16 @@ option go_package = "frontend/auth";
 
 
 message LoginReq {
-  string username = 1[(api.form)="name"];
+  string username = 1[(api.form)="username"];
   string password = 2[(api.form)="password"];
   string next = 3[(api.query)="next"];
 }
 
 message RegisterReq {
-  string username = 1[(api.form)="name"];
+  string username = 1[(api.form)="username"];
   string password = 2[(api.form)="password"];
   string check_password = 3[(api.form)="check_password"];
-  string email = 4[(api.form)="email"];
+  string email = 4[(api.form)="user_email"];
 }
 // message LoginResp {
 //   string token = 1;

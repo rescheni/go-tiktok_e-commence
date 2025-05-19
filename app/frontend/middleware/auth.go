@@ -3,13 +3,11 @@ package middleware
 import (
 	"context"
 
+	frontendUtil "gomall/utils"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/sessions"
 )
-
-type SessionUserIdKey string
-
-const SessionUserId SessionUserIdKey = "user_id"
 
 // 认证中间件
 func GlobalAuth() app.HandlerFunc {
@@ -21,7 +19,7 @@ func GlobalAuth() app.HandlerFunc {
 		// 从session 中获取用户信息  放到context 中   后续需要用户数据直接在context 中获取
 		session := sessions.Default(c)
 		session.Get("user_id")
-		ctx = context.WithValue(ctx, SessionUserId, session.Get("user_id"))
+		ctx = context.WithValue(ctx, frontendUtil.SessionUserId, session.Get("user_id"))
 		// fmt.Println("session user_id = ", session.Get("user_id"))
 		// fmt.Println("🀄️间件")
 		c.Next(ctx)

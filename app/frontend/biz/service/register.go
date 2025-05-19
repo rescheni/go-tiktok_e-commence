@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"e-commence/rpc_gen/kitex_gen/user"
 
 	auth "gomall/hertz_gen/frontend/auth"
 	common "gomall/hertz_gen/frontend/common"
+	"gomall/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/sessions"
@@ -24,9 +26,19 @@ func (h *RegisterService) Run(req *auth.RegisterReq) (resp *common.Empty, err er
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
-	// TODO user svc api
+
+	userResp, err := rpc.UserClient.Regirster(h.Context, &user.RegirsterReq{
+		Username:      req.Username,
+		Password:      req.Password,
+		Checkpassword: req.CheckPassword,
+		Email:         req.Email,
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	session := sessions.Default(h.RequestContext)
-	session.Set("user_id", 114514)
+	session.Set("user_id", userResp.UserId)
 	err = session.Save()
 
 	if err != nil {
