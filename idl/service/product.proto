@@ -1,0 +1,55 @@
+syntax="proto3";
+
+package product;
+
+
+option go_package = "/product";
+
+service ProductCataLogService {
+    rpc ListProduct (ListProductReq) returns (ListProductResp){}
+    rpc GetProduct (GetProductReq) returns (GetProductResp){}
+    rpc SerachProduct (SearchProductReq) returns (SearchProductResp){}
+}
+
+//  商品列表 获取请求
+message ListProductReq{
+    int32 page = 1;         // 文件分页
+    int32 page_size = 2;   // 每页大小
+    string category_name = 3; // 分类名称
+}
+
+// 商品
+message Product{
+    int64 id = 1; // 商品ID
+    string name = 2; // 商品名称
+    string description = 3; // 商品描述
+    string picture = 4; // 商品图片
+    float price = 5; // 商品价格
+    repeated string categorys    = 6; // 商品标签
+}
+
+
+// 商品列表 获取响应
+message ListProductResp{
+    repeated Product products = 1; // 商品列表
+    int32 total = 2; // 商品总数
+}
+
+// 商品详情 获取请求
+message GetProductReq{
+    uint64 id = 1; // 商品ID
+}
+// 商品详情 获取响应
+message GetProductResp{
+    Product product = 1; // 商品详情
+}
+
+message SearchProductReq{
+    string query = 1; // 搜索关键字
+}
+
+
+message SearchProductResp{
+    repeated Product products = 1; // 商品列表
+    int32 total = 2; // 商品总数
+}

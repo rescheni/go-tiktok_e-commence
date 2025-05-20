@@ -13,8 +13,11 @@ help:
 	@echo "  make gen-frontend-auth  # 生成前端认证代码"
 	@echo "  make gen-rpc-user-client      # 生成用户服务代码-客户端"
 	@echo "  make gen-rpc-user-server      # 生成用户服务代码-客户端"
-	@echo "  run_rpc-user      		# 运行用户rpc服务代码"
+	@echo "  run-rpc-user      		# 运行用户rpc服务代码"
 	@echo "  run-frontend           # 启动前端服务"	
+	@echo "  run-rpc-product       # 运行商品rpc服务代码"
+	@echo "  gen-rpc-product-client      # 生成商品服务代码-客户端"
+	@echo "  gen-rpc-product-server      # 生成商品服务代码-服务端"
 
 # 热启动测试运行
 .PHONY: air-test
@@ -34,7 +37,9 @@ gen-frontend-home:
 gen-frontend-auth:
 	@cd app/frontend && cwgo server --type HTTP --idl  ../../idl/frontend/auth_page.proto --service frontend -module gomall -I ../../idl
 
-.PHONY: run_rpc_user
+
+# 用户服务
+.PHONY: run-rpc-user
 run-rpc-user:
 	@cd app/user && go run .
 
@@ -45,3 +50,17 @@ gen-rpc-user-client:
 .PHONY: gen-rpc-user-server
 gen-rpc-user-server:
 	@cd app/user && cwgo server --type RPC --service user --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl --idl ../../idl/service/user.proto
+
+
+# 商品服务
+.PHONY: run-rpc-product
+run-rpc-product:
+	@cd app/product && go run .
+
+.PHONY: gen-rpc-product-client
+gen-rpc-product-client:
+	@cd rpc_gen && cwgo client --type RPC --service product --module e-commence -I ../idl --idl ../idl/service/product.proto	
+
+.PHONY: gen-rpc-product-server
+gen-rpc-product-server:
+	@cd app/product && cwgo server --type RPC --service product --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl --idl ../../idl/service/product.proto
