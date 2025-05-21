@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/hertz-contrib/sessions"
 )
 
 type HomeService struct {
@@ -41,6 +42,12 @@ func (h *HomeService) Run(req *common.Empty) (resp map[string]any, err error) {
 	resp["Items"] = items
 	resp["Title"] = "首页"
 	resp["Icon"] = "https://api.paugram.com/wallpaper/"
+	resp["Name"] = "NULL"
+	// 获取用户名
+	session := sessions.Default(h.RequestContext)
+	if session.Get("user_id") != "" {
+		resp["Name"] = session.Get("user_name")
+	}
 	resp["footerTime"] = time.Now().Format("2006")
 
 	return

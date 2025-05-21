@@ -42,6 +42,7 @@ func (h *LoginService) Run(req *auth.LoginReq) (redirect string, err error) {
 
 	session := sessions.Default(h.RequestContext)
 	session.Set("user_id", resp.UserId)
+	session.Set("user_name", resp.Username)
 	err = session.Save()
 
 	if err != nil {

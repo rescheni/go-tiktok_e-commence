@@ -35,8 +35,9 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 		return nil, errors.New("password not match")
 	}
 	resp = &user.LoginResp{
-		UserId: int64(u.ID),
-		Token:  "",
+		UserId:   int64(u.ID),
+		Username: u.Username,
+		Token:    "",
 	}
 
 	return
