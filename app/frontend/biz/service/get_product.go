@@ -2,10 +2,15 @@ package service
 
 import (
 	"context"
+	"fmt"
+
+	rpcproduct "e-commence/rpc_gen/kitex_gen/product"
+
+	product "gomall/hertz_gen/frontend/product"
+	"gomall/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	common "gomall/hertz_gen/frontend/common"
-	product "gomall/hertz_gen/frontend/product"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 )
 
 type GetProductService struct {
@@ -17,11 +22,19 @@ func NewGetProductService(Context context.Context, RequestContext *app.RequestCo
 	return &GetProductService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *GetProductService) Run(req *product.ProductReq) (resp *common.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
-	return
+func (h *GetProductService) Run(req *product.ProductReq) (resp map[string]any, err error) {
+
+	p, err := rpc.ProductClient.GetProduct(h.Context, &rpcproduct.GetProductReq{Id: req.Id})
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("%v\n\n", req.Id)
+	fmt.Printf("%v\n\n", p)
+
+	p.Product.Picture = "https://api.paugram.com/wallpaper/"
+
+	return utils.H{
+		"item": p.Product,
+	}, nil
+
 }

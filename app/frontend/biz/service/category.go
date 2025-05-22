@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"e-commence/rpc_gen/kitex_gen/product"
+
+	category "gomall/hertz_gen/frontend/category"
+	"gomall/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	category "gomall/hertz_gen/frontend/category"
-	common "gomall/hertz_gen/frontend/common"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 )
 
 type CategoryService struct {
@@ -17,11 +20,21 @@ func NewCategoryService(Context context.Context, RequestContext *app.RequestCont
 	return &CategoryService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *CategoryService) Run(req *category.CategoryReq) (resp *common.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
-	return
+func (h *CategoryService) Run(req *category.CategoryReq) (resp map[string]any, err error) {
+
+	p, err := rpc.ProductClient.ListProduct(h.Context, &product.ListProductReq{
+		CategoryName: req.Category,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	for _, v := range p.Products {
+		v.Picture = "https://api.paugram.com/wallpaper/"
+	}
+
+	return utils.H{
+		"Title": "Category",
+		"items": p.Products,
+	}, nil
 }

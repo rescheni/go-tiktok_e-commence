@@ -29,10 +29,10 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
-	"SerachProduct": kitex.NewMethodInfo(
-		serachProductHandler,
-		newSerachProductArgs,
-		newSerachProductResult,
+	"SearchProduct": kitex.NewMethodInfo(
+		searchProductHandler,
+		newSearchProductArgs,
+		newSearchProductResult,
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
@@ -408,7 +408,7 @@ func (p *GetProductResult) GetResult() interface{} {
 	return p.Success
 }
 
-func serachProductHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+func searchProductHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
@@ -416,64 +416,64 @@ func serachProductHandler(ctx context.Context, handler interface{}, arg, result 
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
-		resp, err := handler.(product.ProductCataLogService).SerachProduct(ctx, req)
+		resp, err := handler.(product.ProductCataLogService).SearchProduct(ctx, req)
 		if err != nil {
 			return err
 		}
 		return st.SendMsg(resp)
-	case *SerachProductArgs:
-		success, err := handler.(product.ProductCataLogService).SerachProduct(ctx, s.Req)
+	case *SearchProductArgs:
+		success, err := handler.(product.ProductCataLogService).SearchProduct(ctx, s.Req)
 		if err != nil {
 			return err
 		}
-		realResult := result.(*SerachProductResult)
+		realResult := result.(*SearchProductResult)
 		realResult.Success = success
 		return nil
 	default:
 		return errInvalidMessageType
 	}
 }
-func newSerachProductArgs() interface{} {
-	return &SerachProductArgs{}
+func newSearchProductArgs() interface{} {
+	return &SearchProductArgs{}
 }
 
-func newSerachProductResult() interface{} {
-	return &SerachProductResult{}
+func newSearchProductResult() interface{} {
+	return &SearchProductResult{}
 }
 
-type SerachProductArgs struct {
+type SearchProductArgs struct {
 	Req *product.SearchProductReq
 }
 
-func (p *SerachProductArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+func (p *SearchProductArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetReq() {
 		p.Req = new(product.SearchProductReq)
 	}
 	return p.Req.FastRead(buf, _type, number)
 }
 
-func (p *SerachProductArgs) FastWrite(buf []byte) (n int) {
+func (p *SearchProductArgs) FastWrite(buf []byte) (n int) {
 	if !p.IsSetReq() {
 		return 0
 	}
 	return p.Req.FastWrite(buf)
 }
 
-func (p *SerachProductArgs) Size() (n int) {
+func (p *SearchProductArgs) Size() (n int) {
 	if !p.IsSetReq() {
 		return 0
 	}
 	return p.Req.Size()
 }
 
-func (p *SerachProductArgs) Marshal(out []byte) ([]byte, error) {
+func (p *SearchProductArgs) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetReq() {
 		return out, nil
 	}
 	return proto.Marshal(p.Req)
 }
 
-func (p *SerachProductArgs) Unmarshal(in []byte) error {
+func (p *SearchProductArgs) Unmarshal(in []byte) error {
 	msg := new(product.SearchProductReq)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -482,58 +482,58 @@ func (p *SerachProductArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var SerachProductArgs_Req_DEFAULT *product.SearchProductReq
+var SearchProductArgs_Req_DEFAULT *product.SearchProductReq
 
-func (p *SerachProductArgs) GetReq() *product.SearchProductReq {
+func (p *SearchProductArgs) GetReq() *product.SearchProductReq {
 	if !p.IsSetReq() {
-		return SerachProductArgs_Req_DEFAULT
+		return SearchProductArgs_Req_DEFAULT
 	}
 	return p.Req
 }
 
-func (p *SerachProductArgs) IsSetReq() bool {
+func (p *SearchProductArgs) IsSetReq() bool {
 	return p.Req != nil
 }
 
-func (p *SerachProductArgs) GetFirstArgument() interface{} {
+func (p *SearchProductArgs) GetFirstArgument() interface{} {
 	return p.Req
 }
 
-type SerachProductResult struct {
+type SearchProductResult struct {
 	Success *product.SearchProductResp
 }
 
-var SerachProductResult_Success_DEFAULT *product.SearchProductResp
+var SearchProductResult_Success_DEFAULT *product.SearchProductResp
 
-func (p *SerachProductResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+func (p *SearchProductResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetSuccess() {
 		p.Success = new(product.SearchProductResp)
 	}
 	return p.Success.FastRead(buf, _type, number)
 }
 
-func (p *SerachProductResult) FastWrite(buf []byte) (n int) {
+func (p *SearchProductResult) FastWrite(buf []byte) (n int) {
 	if !p.IsSetSuccess() {
 		return 0
 	}
 	return p.Success.FastWrite(buf)
 }
 
-func (p *SerachProductResult) Size() (n int) {
+func (p *SearchProductResult) Size() (n int) {
 	if !p.IsSetSuccess() {
 		return 0
 	}
 	return p.Success.Size()
 }
 
-func (p *SerachProductResult) Marshal(out []byte) ([]byte, error) {
+func (p *SearchProductResult) Marshal(out []byte) ([]byte, error) {
 	if !p.IsSetSuccess() {
 		return out, nil
 	}
 	return proto.Marshal(p.Success)
 }
 
-func (p *SerachProductResult) Unmarshal(in []byte) error {
+func (p *SearchProductResult) Unmarshal(in []byte) error {
 	msg := new(product.SearchProductResp)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
@@ -542,22 +542,22 @@ func (p *SerachProductResult) Unmarshal(in []byte) error {
 	return nil
 }
 
-func (p *SerachProductResult) GetSuccess() *product.SearchProductResp {
+func (p *SearchProductResult) GetSuccess() *product.SearchProductResp {
 	if !p.IsSetSuccess() {
-		return SerachProductResult_Success_DEFAULT
+		return SearchProductResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-func (p *SerachProductResult) SetSuccess(x interface{}) {
+func (p *SearchProductResult) SetSuccess(x interface{}) {
 	p.Success = x.(*product.SearchProductResp)
 }
 
-func (p *SerachProductResult) IsSetSuccess() bool {
+func (p *SearchProductResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *SerachProductResult) GetResult() interface{} {
+func (p *SearchProductResult) GetResult() interface{} {
 	return p.Success
 }
 
@@ -591,11 +591,11 @@ func (p *kClient) GetProduct(ctx context.Context, Req *product.GetProductReq) (r
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) SerachProduct(ctx context.Context, Req *product.SearchProductReq) (r *product.SearchProductResp, err error) {
-	var _args SerachProductArgs
+func (p *kClient) SearchProduct(ctx context.Context, Req *product.SearchProductReq) (r *product.SearchProductResp, err error) {
+	var _args SearchProductArgs
 	_args.Req = Req
-	var _result SerachProductResult
-	if err = p.c.Call(ctx, "SerachProduct", &_args, &_result); err != nil {
+	var _result SearchProductResult
+	if err = p.c.Call(ctx, "SearchProduct", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

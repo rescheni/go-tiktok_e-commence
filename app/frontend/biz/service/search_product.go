@@ -3,9 +3,12 @@ package service
 import (
 	"context"
 
-	"github.com/cloudwego/hertz/pkg/app"
-	common "gomall/hertz_gen/frontend/common"
+	rpcproduct "e-commence/rpc_gen/kitex_gen/product"
 	product "gomall/hertz_gen/frontend/product"
+	"gomall/infra/rpc"
+
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/utils"
 )
 
 type SearchProductService struct {
@@ -17,11 +20,21 @@ func NewSearchProductService(Context context.Context, RequestContext *app.Reques
 	return &SearchProductService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *SearchProductService) Run(req *product.SearchProductReq) (resp *common.Empty, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
-	return
+func (h *SearchProductService) Run(req *product.SearchProductReq) (resp map[string]any, err error) {
+
+	s, err := rpc.ProductClient.SearchProduct(h.Context, &rpcproduct.SearchProductReq{
+		Query: req.Q,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range s.Products {
+		v.Picture = "https://api.paugram.com/wallpaper/"
+	}
+	return utils.H{
+		"Title": "Search",
+		"items": s.Products,
+	}, nil
 }

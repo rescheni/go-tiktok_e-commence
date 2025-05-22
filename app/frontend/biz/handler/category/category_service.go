@@ -6,7 +6,6 @@ import (
 	"gomall/biz/service"
 	"gomall/biz/utils"
 	category "gomall/hertz_gen/frontend/category"
-	common "gomall/hertz_gen/frontend/common"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -23,8 +22,7 @@ func Category(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := &common.Empty{}
-	resp, err = service.NewCategoryService(ctx, c).Run(&req)
+	resp, err := service.NewCategoryService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return

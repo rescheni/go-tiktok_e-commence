@@ -75,6 +75,7 @@ func main() {
 			"Icon":  "https://api.paugram.com/wallpaper/",
 		})
 	})
+	h.GET("/category")
 
 	h.Spin()
 }

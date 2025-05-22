@@ -8,7 +8,7 @@ option go_package = "/product";
 service ProductCataLogService {
     rpc ListProduct (ListProductReq) returns (ListProductResp){}
     rpc GetProduct (GetProductReq) returns (GetProductResp){}
-    rpc SerachProduct (SearchProductReq) returns (SearchProductResp){}
+    rpc SearchProduct (SearchProductReq) returns (SearchProductResp){}
 }
 
 //  商品列表 获取请求

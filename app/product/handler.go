@@ -23,9 +23,9 @@ func (s *ProductCataLogServiceImpl) GetProduct(ctx context.Context, req *product
 	return resp, err
 }
 
-// SerachProduct implements the ProductCataLogServiceImpl interface.
-func (s *ProductCataLogServiceImpl) SerachProduct(ctx context.Context, req *product.SearchProductReq) (resp *product.SearchProductResp, err error) {
-	resp, err = service.NewSerachProductService(ctx).Run(req)
+// SearchProduct implements the ProductCataLogServiceImpl interface.
+func (s *ProductCataLogServiceImpl) SearchProduct(ctx context.Context, req *product.SearchProductReq) (resp *product.SearchProductResp, err error) {
+	resp, err = service.NewSearchProductService(ctx).Run(req)
 
 	return resp, err
 }

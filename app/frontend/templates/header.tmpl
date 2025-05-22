@@ -42,7 +42,7 @@
                 分类
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">电子产品</a></li>
+                <li><a class="dropdown-item" href="/category/t-shirt">T-Shirt</a></li>
                 <li><a class="dropdown-item" href="#">生活用品</a></li>
                 <li><a class="dropdown-item" href="#">其他</a></li>
                 <li>
@@ -58,8 +58,8 @@
               <a class="nav-link" href="/about">About</a>
             </li>
           </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search " />
+          <form class="d-flex" role="search" action="/search" method="get">
+            <input class="form-control me-2" type="Search" placeholder="search" name="q" aria-label="search" value="{{ .q }}"/>
             <button class="btn btn-outline-success" type="submit">
               Search
             </button>

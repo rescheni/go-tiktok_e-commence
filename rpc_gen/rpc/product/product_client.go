@@ -14,7 +14,7 @@ type RPCClient interface {
 	Service() string
 	ListProduct(ctx context.Context, Req *product.ListProductReq, callOptions ...callopt.Option) (r *product.ListProductResp, err error)
 	GetProduct(ctx context.Context, Req *product.GetProductReq, callOptions ...callopt.Option) (r *product.GetProductResp, err error)
-	SerachProduct(ctx context.Context, Req *product.SearchProductReq, callOptions ...callopt.Option) (r *product.SearchProductResp, err error)
+	SearchProduct(ctx context.Context, Req *product.SearchProductReq, callOptions ...callopt.Option) (r *product.SearchProductResp, err error)
 }
 
 func NewRPCClient(dstService string, opts ...client.Option) (RPCClient, error) {
@@ -51,6 +51,6 @@ func (c *clientImpl) GetProduct(ctx context.Context, Req *product.GetProductReq,
 	return c.kitexClient.GetProduct(ctx, Req, callOptions...)
 }
 
-func (c *clientImpl) SerachProduct(ctx context.Context, Req *product.SearchProductReq, callOptions ...callopt.Option) (r *product.SearchProductResp, err error) {
-	return c.kitexClient.SerachProduct(ctx, Req, callOptions...)
+func (c *clientImpl) SearchProduct(ctx context.Context, Req *product.SearchProductReq, callOptions ...callopt.Option) (r *product.SearchProductResp, err error) {
+	return c.kitexClient.SearchProduct(ctx, Req, callOptions...)
 }
