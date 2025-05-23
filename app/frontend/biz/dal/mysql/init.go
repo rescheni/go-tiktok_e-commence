@@ -1,7 +1,8 @@
 package mysql
 
 import (
-	"gomall/conf"
+	"os"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -12,7 +13,8 @@ var (
 )
 
 func Init() {
-	DB, err = gorm.Open(mysql.Open(conf.GetConf().MySQL.DSN),
+	// DB, err = gorm.Open(mysql.Open(conf.GetConf().MySQL.DSN),
+	DB, err = gorm.Open(mysql.Open(os.Getenv("GOMALL_MYSQL_DSN")),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,

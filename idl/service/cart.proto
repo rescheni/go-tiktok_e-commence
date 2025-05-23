@@ -1,0 +1,39 @@
+syntax="proto3";
+
+package cart;
+
+
+option go_package = "/cart";
+
+service CartService {
+    rpc AddItem(AddItemreq) returns(AddItemresp){}
+    rpc GetCart(GetCartReq) returns(GetCartResp){}
+    rpc EmptyCart(EmptyCartreq) returns(EmptyCartresp) {}
+}
+
+
+message CartItem{
+    uint64 product_id = 1;
+    uint64 quantity = 2;
+}
+message AddItemreq{
+    uint64 user_id = 1;
+    CartItem item = 2;
+}
+message AddItemresp{
+
+}
+
+message GetCartReq {
+    uint64 user_id = 1;
+}
+message GetCartResp{
+
+    repeated CartItem  items = 1;
+}
+message EmptyCartreq{
+    uint64 user_id = 1;
+}
+message EmptyCartresp{
+
+}

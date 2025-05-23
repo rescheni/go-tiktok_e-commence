@@ -1,0 +1,59 @@
+package rpc
+
+import (
+	"e-commence/rpc_gen/kitex_gen/product/productcatalogservice"
+	"e-commence/rpc_gen/kitex_gen/user/userservice"
+	"os"
+	"sync"
+
+	cartUtil "e-commence/app/cart/utils"
+
+	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/pkg/klog"
+	consul "github.com/kitex-contrib/registry-consul"
+)
+
+var (
+	ProductClient productcatalogservice.Client
+	UserClient    userservice.Client
+	once          sync.Once
+)
+
+func Init() {
+	once.Do(
+		func() {
+			iniUserClient()
+			iniProductClient()
+		},
+	)
+}
+func iniUserClient() {
+	r, err := consul.NewConsulResolver(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
+
+	var opts []client.Option
+
+	if err != nil {
+		klog.Fatal("Error creating consul resolver")
+	}
+	cartUtil.MustHandleError(err)
+	opts = append(opts, client.WithResolver(r))
+	UserClient, err = userservice.NewClient("user", opts...)
+
+	if err != nil {
+		klog.Fatal("Error creating user client")
+	}
+}
+func iniProductClient() {
+
+	r, err := consul.NewConsulResolver(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
+	if err != nil {
+		klog.Fatal("Error creating consul resolver")
+	}
+	var opts []client.Option
+	opts = append(opts, client.WithResolver(r))
+	ProductClient, err = productcatalogservice.NewClient("product", opts...)
+
+	if err != nil {
+		klog.Fatal("Error creating user client")
+	}
+}
