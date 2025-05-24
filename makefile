@@ -14,6 +14,7 @@ help:
 	@echo "  	make run-rpc-user      				# 运行用户rpc服务代码"
 	@echo "  	make run-rpc-product       			# 运行商品rpc服务代码"
 	@echo "  	make run-rpc-cart       			# 运行购物车rpc服务代码"
+	@echo "		make run-rpc-payment 				# 运行支付 rpc 服务代码"
 	
 	@echo "frontend 代码生成"
 	@echo "  	make gen-frontend-home  			# 生成前端主页代码"
@@ -31,6 +32,9 @@ help:
 
 	@echo "  	make gen-rpc-cart-client      	# 生成购物车服务代码-客户端"
 	@echo "  	make gen-rpc-cart-server      	# 生成购物车服务代码-服务端"
+	
+	@echo "  	make gen-rpc-payment-client      	# 生成购物车服务代码-客户端"
+	@echo "  	make gen-rpc-payment-server      	# 生成购物车服务代码-服务端"
 
 # 热启动测试运行
 
@@ -102,4 +106,19 @@ gen-rpc-cart-client:
 .PHONY: gen-rpc-cart-server
 gen-rpc-cart-server:
 	@cd app/cart && cwgo server --type RPC --service cart --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl --idl ../../idl/service/cart.proto
+
+
+# 支付服务
+
+.PHONY: run-rpc-payment
+run-rpc-payment:
+	@cd app/payment  && go run .
+
+.PHONY: gen-rpc-payment-client 
+gen-rpc-payment-client:
+	@cd rpc_gen && cwgo client --type RPC --service payment --module e-commence -I ../idl --idl ../idl/service/payment.proto	
+
+.PHONY: gen-rpc-payment-server
+gen-rpc-payment-server:
+	@cd app/payment && cwgo server --type RPC --service payment --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl --idl ../../idl/service/payment.proto
 

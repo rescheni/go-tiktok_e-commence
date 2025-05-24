@@ -2,6 +2,8 @@ package utils
 
 import (
 	"context"
+	"e-commence/rpc_gen/kitex_gen/cart"
+	"gomall/infra/rpc"
 	frontendUtil "gomall/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -23,6 +25,19 @@ func WarpRespose(ctx context.Context, c *app.RequestContext, content map[string]
 	// todo edit custom code
 
 	userId := frontendUtil.GetUserIdFromCtx(ctx)
+
 	content["user_id"] = userId
+
+	if userId > 0 {
+		cartResp, err := rpc.CartClient.GetCart(ctx, &cart.GetCartReq{
+			UserId: uint64(frontendUtil.GetUserIdFromCtx(ctx)),
+		})
+		if err != nil {
+			return nil
+		}
+		if cartResp != nil {
+			content["cart_num"] = len(cartResp.Items)
+		}
+	}
 	return content
 }

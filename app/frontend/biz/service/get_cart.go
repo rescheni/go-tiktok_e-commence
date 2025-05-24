@@ -4,6 +4,7 @@ import (
 	"context"
 	"e-commence/rpc_gen/kitex_gen/cart"
 	"e-commence/rpc_gen/kitex_gen/product"
+	"fmt"
 	"strconv"
 
 	common "gomall/hertz_gen/frontend/common"
@@ -49,17 +50,20 @@ func (h *GetCartService) Run(req *common.Empty) (resp map[string]any, err error)
 		items = append(items, map[string]string{
 			"Name":        productInfo.Product.Name,
 			"Description": productInfo.Product.Description,
-			"Picture":     productInfo.Product.Picture,
-			"Price":       strconv.FormatFloat(float64((productInfo.Product.Price)), 'f', 2, 64),
-			"Qty":         strconv.Itoa(int(v.Quantity)),
+			// "Picture":     productInfo.Product.Picture,
+			"Picture": "https://api.paugram.com/wallpaper/",
+			"Price":   strconv.FormatFloat(float64(productInfo.Product.Price), 'f', 2, 64),
+			"Qty":     strconv.Itoa(int(v.Quantity)),
 		})
 	}
 	// resp["Items"] = items
 	// resp["Title"] = "Cart"
 
+	fmt.Printf("%d\n", strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64))
+
 	return utils.H{
 		"Title": "Cart",
 		"Items": items,
-		"Totle": Cart_Sum,
+		"Totle": strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64),
 	}, nil
 }
