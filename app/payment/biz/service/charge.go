@@ -2,8 +2,11 @@ package service
 
 import (
 	"context"
+	"e-commence/app/payment/biz/dal/mysql"
+	"e-commence/app/payment/biz/model"
 	payment "e-commence/rpc_gen/kitex_gen/payment"
 	"strconv"
+	"time"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	creditcard "github.com/durango/go-credit-card"
@@ -34,10 +37,23 @@ func (s *ChargeService) Run(req *payment.ChargeReq) (resp *payment.ChargeResp, e
 
 	resp = &payment.ChargeResp{}
 	transactionId, err := uuid.NewRandom()
-	_ = transactionId
 	if err != nil {
 		return nil, kerrors.NewGRPCBizStatusError(40049, "Get UUID Error")
 	}
 
-	return
+	err = model.CreatePaymentLog(mysql.DB, s.ctx, &model.PaymentLog{
+		UserId:        int64(req.UserId),
+		OrderId:       req.OrderId,
+		TransactionId: transactionId.String(),
+		Amount:        req.Amount,
+		PayAt:         time.Now(),
+	})
+
+	if err != nil {
+		return nil, kerrors.NewGRPCBizStatusError(40050, "Create Payment Log Error: "+err.Error())
+	}
+
+	return &payment.ChargeResp{
+		TransactionId: transactionId.String(),
+	}, nil
 }

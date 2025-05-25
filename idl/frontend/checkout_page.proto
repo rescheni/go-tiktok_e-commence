@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+
+
+package frontend.checkout;
+
+import "api.proto";
+import "frontend/common.proto";
+
+
+option go_package = "/frontend/checkout";
+
+    
+message CheckoutReq {
+    string email = 1[(api.form) = "email"];
+    string firstname = 2[(api.form) = "firstname"];
+    string lastname = 3[(api.form) = "lastname"];
+    string street = 4[(api.form) = "street"];
+    string zipcode = 5[(api.form) = "zipcode"];
+    string province = 6[(api.form) = "province"] ;
+    string country = 7[(api.form) = "country"];
+    string city = 8[(api.form) = "city"];
+    string cart_num = 9[(api.form) = "cartNum"];
+    int32 expiration_mount = 10[(api.form) = "expirationMount"];
+    int32 expiratrion_Year = 11[(api.form) = "expirationYear"];
+    int32 cvv = 12[(api.form) = "cvv"];
+    string payment = 13[(api.form) = "payment"];
+}
+
+
+
+service CheckoutService {
+    // 结算页面
+    rpc Checkout(common.Empty) returns (common.Empty){
+        option (api.get) = "/Checkout";
+    }
+    // 结算等待页面
+    rpc CheckoutWaiting(CheckoutReq) returns(common.Empty){
+        option (api.post) = "/Checkout/Waiting";
+    }
+    // 结算返回
+    rpc CheckoutResult(common.Empty) returns(common.Empty){
+        option (api.get) = "/Checkout/Result";
+    }
+}
+
+
+

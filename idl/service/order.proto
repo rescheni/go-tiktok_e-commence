@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package order;    
+
+option go_package = "/order";
+
+service OrderService{
+    rpc PlaceOrder(PlaceOrderReq) returns (PlaceOrderResp){}
+    rpc ListOrder(ListOrderReq) returns (ListOrderResp){}
+}
+
+message PlaceOrderReq {
+
+}
+message PlaceOrderResp{
+
+}
+message ListOrderReq{
+
+}
+message ListOrderResp{
+
+}

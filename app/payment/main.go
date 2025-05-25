@@ -2,8 +2,10 @@ package main
 
 import (
 	"net"
+	"os"
 	"time"
 
+	"e-commence/app/payment/biz/dal"
 	"e-commence/app/payment/conf"
 	"e-commence/rpc_gen/kitex_gen/payment/paymentservice"
 
@@ -12,6 +14,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
+	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -23,6 +26,8 @@ func main() {
 	if err != nil {
 		panic(".env null load")
 	}
+
+	dal.Init()
 
 	opts := kitexInit()
 
@@ -41,11 +46,18 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
+	// consul 服务注册
+	// consul.init
+	r, err := consul.NewConsulRegister(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
+
+	if err != nil {
+		klog.Fatal("consul Init error ")
+	}
 
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
-	}))
+	}), server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

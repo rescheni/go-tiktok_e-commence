@@ -19,7 +19,7 @@ message CreditCardInfo{
 }
 
 message ChargeReq {
-    float amount = 1;
+    uint32 amount = 1;
     CreditCardInfo credit_card = 2;
     string order_id = 3;
     uint64 user_id = 4;

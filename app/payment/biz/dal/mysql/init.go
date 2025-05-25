@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"e-commence/app/payment/biz/model"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -23,4 +24,5 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+	DB.AutoMigrate(&model.PaymentLog{})
 }

@@ -36,8 +36,6 @@ func (h *GetCartService) Run(req *common.Empty) (resp map[string]any, err error)
 
 	var Cart_Sum float64
 
-	// resp = map[string]any{}
-
 	var items []map[string]string
 
 	Cart_Sum = 0
@@ -59,11 +57,11 @@ func (h *GetCartService) Run(req *common.Empty) (resp map[string]any, err error)
 	// resp["Items"] = items
 	// resp["Title"] = "Cart"
 
-	fmt.Printf("%d\n", strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64))
+	fmt.Printf("%s\n", strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64))
 
 	return utils.H{
 		"Title": "Cart",
 		"Items": items,
-		"Totle": strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64),
+		"Total": strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64),
 	}, nil
 }
