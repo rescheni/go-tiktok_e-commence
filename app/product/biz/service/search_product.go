@@ -19,7 +19,6 @@ func (s *SearchProductService) Run(req *product.SearchProductReq) (resp *product
 
 	productQuery := model.NewProductQuery(s.ctx, mysql.DB)
 	p, err := productQuery.SearchProduct(req.Query)
-	// fmt.Printf("%#v\n", req)
 	cnt := int32(len(p))
 	resp = &product.SearchProductResp{}
 	for _, v := range p {

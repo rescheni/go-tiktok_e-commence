@@ -4,7 +4,6 @@ import (
 	"context"
 	"e-commence/rpc_gen/kitex_gen/cart"
 	"e-commence/rpc_gen/kitex_gen/product"
-	"fmt"
 	"strconv"
 
 	common "gomall/hertz_gen/frontend/common"
@@ -56,8 +55,6 @@ func (h *GetCartService) Run(req *common.Empty) (resp map[string]any, err error)
 	}
 	// resp["Items"] = items
 	// resp["Title"] = "Cart"
-
-	fmt.Printf("%s\n", strconv.FormatFloat(float64(Cart_Sum), 'f', 2, 64))
 
 	return utils.H{
 		"Title": "Cart",

@@ -3,6 +3,7 @@ package rpc
 import (
 	"e-commence/rpc_gen/kitex_gen/cart/cartservice"
 	"e-commence/rpc_gen/kitex_gen/checkout/checkoutservice"
+	"e-commence/rpc_gen/kitex_gen/order/orderservice"
 	"e-commence/rpc_gen/kitex_gen/product/productcatalogservice"
 	"e-commence/rpc_gen/kitex_gen/user/userservice"
 	"os"
@@ -21,6 +22,7 @@ var (
 	UserClient     userservice.Client
 	CartClient     cartservice.Client
 	CheckoutClient checkoutservice.Client
+	OrderClient    orderservice.Client
 	once           sync.Once
 )
 
@@ -31,7 +33,8 @@ func Init() {
 			iniUserClient()
 			iniProductClient()
 			iniCartClient()
-			InitCheckoutClient()
+			iniCheckoutClient()
+			iniOrderClient()
 		},
 	)
 }
@@ -84,7 +87,7 @@ func iniCartClient() {
 	}
 }
 
-func InitCheckoutClient() {
+func iniCheckoutClient() {
 	r, err := consulInit()
 	frontendUtil.MustHandleError(err)
 
@@ -95,4 +98,18 @@ func InitCheckoutClient() {
 	if err != nil {
 		klog.Fatal("Error creating user client")
 	}
+}
+
+func iniOrderClient() {
+	r, err := consulInit()
+	frontendUtil.MustHandleError(err)
+
+	var opts []client.Option
+	opts = append(opts, client.WithResolver(r))
+	OrderClient, err = orderservice.NewClient("order", opts...)
+
+	if err != nil {
+		klog.Fatal("Error creating user client")
+	}
+
 }

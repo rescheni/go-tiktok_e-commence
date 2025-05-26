@@ -16,12 +16,14 @@ help:
 	@echo "  	make run-rpc-cart       			# 运行购物车rpc服务代码"
 	@echo "		make run-rpc-payment 				# 运行支付 rpc 服务代码"
 	@echo "		make run-rpc-checkout 				# 运行结账 rpc 服务代码"
+	@echo "		make run-rpc-order  				# 运行结账 rpc 服务代码"
 	
 	@echo "frontend 代码生成"
 	@echo "  	make gen-frontend-home  			# 生成前端主页代码"
 	@echo "  	make gen-frontend-auth  			# 生成用户认证前端代码"
 	@echo "  	make gen-frontend-product			# 生成商品服务前端代码"
 	@echo "		make gen-frontend-checkout			# 生成购物结算前端代码"
+	@echo "		make gen-frontend-order				# 生成订单服务前端代码"
 
 	@echo "rpc 服务端 代码生成"
 	
@@ -39,6 +41,9 @@ help:
 
 	@echo "  	make gen-rpc-checkout-client      	# 生成结账服务代码-客户端"
 	@echo "  	make gen-rpc-checkout-server      	# 生成结账服务代码-服务端"
+
+	@echo "  	make gen-rpc-order-client      		# 生成订单服务代码-客户端"
+	@echo "  	make gen-rpc-order-server      		# 生成订单服务代码-服务端"
 
 
 
@@ -75,6 +80,20 @@ gen-frontend-cart:
 .PHONY: gen-frontend-checkout 
 gen-frontend-checkout:
 	@cd app/frontend && cwgo server --type HTTP --idl  ../../idl/frontend/checkout_page.proto --service frontend -module gomall -I ../../idl
+
+
+# 前端框架 订单服务代码生成 
+.PHONY: gen-frontend-order
+gen-frontend-order:
+	@cd app/frontend && cwgo server --type HTTP --idl  ../../idl/frontend/order_page.proto --service frontend -module gomall -I ../../idl
+
+
+
+
+
+
+
+
 
 
 # 用户服务
@@ -146,3 +165,17 @@ gen-rpc-checkout-client:
 .PHONY: gen-rpc-checkout-server
 gen-rpc-checkout-server:
 	@cd app/checkout && cwgo server --type RPC --service checkout --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl/service --idl ../../idl/service/checkout.proto
+
+
+# 订单服务
+.PHONY: run-rpc-order
+run-rpc-order:
+	@cd app/order  && go run .
+
+.PHONY: gen-rpc-order-client 
+gen-rpc-order-client:
+	@cd rpc_gen && cwgo client --type RPC --service order --module e-commence -I ../idl/service --idl ../idl/service/order.proto	
+
+.PHONY: gen-rpc-order-server
+gen-rpc-order-server:
+	@cd app/order && cwgo server --type RPC --service order --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl/service --idl ../../idl/service/order.proto

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	rpcproduct "e-commence/rpc_gen/kitex_gen/product"
 
@@ -28,8 +27,6 @@ func (h *GetProductService) Run(req *product.ProductReq) (resp map[string]any, e
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("%v\n\n", req.Id)
-	fmt.Printf("%v\n\n", p)
 
 	p.Product.Picture = "https://api.paugram.com/wallpaper/"
 

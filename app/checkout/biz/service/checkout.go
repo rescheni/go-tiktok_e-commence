@@ -5,11 +5,12 @@ import (
 	"e-commence/app/checkout/infra/rpc"
 	"e-commence/rpc_gen/kitex_gen/cart"
 	checkout "e-commence/rpc_gen/kitex_gen/checkout"
+	"e-commence/rpc_gen/kitex_gen/order"
 	"e-commence/rpc_gen/kitex_gen/payment"
 	"e-commence/rpc_gen/kitex_gen/product"
+	"strconv"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
-	"github.com/google/uuid"
 	"k8s.io/klog/v2"
 )
 
@@ -33,9 +34,11 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	}
 
 	if CartResult == nil || CartResult.Items == nil {
-		return nil, kerrors.NewGRPCBizStatusError(50002, err.Error())
+		return nil, kerrors.NewBizStatusError(50002, "CartResult IS Null")
 	}
 	Total := float32(0)
+	// items := make([]order.OrderItem, 0)
+	var items []*order.OrderItem
 
 	for _, val := range CartResult.Items {
 		productinfo, err := rpc.ProductClient.GetProduct(s.ctx, &product.GetProductReq{
@@ -50,12 +53,40 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		}
 
 		Total += float32(val.Quantity) * productinfo.Product.Price
+
+		items = append(items, &order.OrderItem{
+			Cost: productinfo.Product.Price,
+			Item: &cart.CartItem{
+				ProductId: val.ProductId,
+				Quantity:  val.Quantity,
+			},
+		})
+
 	}
 
-	var order_id string
-	u, _ := uuid.NewRandom()
-	order_id = u.String()
+	// TODO: 类型不匹配
+	zcode, err := strconv.Atoi(req.Address.ZipCode)
+	if err != nil {
+		return nil, kerrors.NewBizStatusError(50002, "Checkout Atoi err")
+	}
+	orderresp, err := rpc.OrderClient.PlaceOrder(s.ctx, &order.PlaceOrderReq{
+		UserId: req.UserId,
+		Email:  req.Email,
+		Address: &order.Address{
+			StreetAddress: req.Address.StreetAddress,
+			City:          req.Address.City,
+			State:         req.Address.State,
+			Country:       req.Address.County,
+			ZipCode:       int32(zcode),
+		},
+		Items: items,
+	})
 
+	if err != nil || orderresp == nil || orderresp.Order == nil {
+		return nil, kerrors.NewGRPCBizStatusError(5000500, err.Error())
+	}
+
+	order_id := orderresp.Order.OrderId
 	payReq := &payment.ChargeReq{
 		UserId:     uint64(req.UserId),
 		OrderId:    order_id,

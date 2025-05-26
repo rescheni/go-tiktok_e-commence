@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package order;    
 
+import "cart.proto";
+
 option go_package = "/order";
 
 service OrderService{
@@ -9,15 +11,49 @@ service OrderService{
     rpc ListOrder(ListOrderReq) returns (ListOrderResp){}
 }
 
+message Address {
+    string street_address = 1;
+    string city = 2;
+    string state = 3;
+    string country  = 4;
+    int32 zip_code = 5;
+}
+
+
+message OrderItem{
+    cart.CartItem item  = 1;
+    float cost = 2;
+}
 message PlaceOrderReq {
+    uint32 user_id = 1;
+    string user_currency = 2;
 
+    Address address = 3;
+    string email = 4;
+    repeated OrderItem items = 5;
 }
+
+message OrderResult {
+    string order_id = 1;
+}
+
 message PlaceOrderResp{
-
+    OrderResult order = 1;
 }
-message ListOrderReq{
 
+message Order {
+    repeated OrderItem items = 1;   // 订单列表   
+    string order_id = 2;            // 订单编号 
+    uint32 user_id = 3;             // 用户id
+    string user_currency = 4;       // 用户币种
+    Address address = 5;            // 地址       
+    string email = 6;
+    int32 create_at = 7;
+}
+
+message ListOrderReq{
+    uint64 user_id = 1;    
 }
 message ListOrderResp{
-
+    repeated Order orders = 1;
 }

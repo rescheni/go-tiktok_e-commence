@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"e-commence/rpc_gen/kitex_gen/cart/cartservice"
+	"e-commence/rpc_gen/kitex_gen/order/orderservice"
 	"e-commence/rpc_gen/kitex_gen/payment/paymentservice"
 	"e-commence/rpc_gen/kitex_gen/product/productcatalogservice"
 	"os"
@@ -18,16 +19,17 @@ var (
 	CartClient    cartservice.Client
 	ProductClient productcatalogservice.Client
 	PaymentClient paymentservice.Client
+	OrderClient   orderservice.Client
 	once          sync.Once
 	err           error
 )
 
 func InitClient() {
 	once.Do(func() {
-		InitCartClient()
-		InitProductClient()
-		InitPaymentClient()
-
+		iniCartClient()
+		iniProductClient()
+		iniPaymentClient()
+		iniOrderClient()
 	})
 }
 
@@ -39,7 +41,7 @@ func getConsulServer() discovery.Resolver {
 	return r
 }
 
-func InitCartClient() {
+func iniCartClient() {
 
 	r := getConsulServer()
 	var opts []client.Option
@@ -51,7 +53,7 @@ func InitCartClient() {
 	}
 }
 
-func InitPaymentClient() {
+func iniPaymentClient() {
 
 	r := getConsulServer()
 	var opts []client.Option
@@ -63,7 +65,7 @@ func InitPaymentClient() {
 	}
 }
 
-func InitProductClient() {
+func iniProductClient() {
 
 	r := getConsulServer()
 	var opts []client.Option
@@ -73,4 +75,17 @@ func InitProductClient() {
 	if err != nil {
 		klog.Fatal("Error creating user client")
 	}
+}
+
+func iniOrderClient() {
+	r := getConsulServer()
+
+	var opts []client.Option
+	opts = append(opts, client.WithResolver(r))
+	OrderClient, err = orderservice.NewClient("order", opts...)
+
+	if err != nil {
+		klog.Fatal("Error creating user client")
+	}
+
 }

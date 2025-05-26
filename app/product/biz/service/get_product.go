@@ -5,7 +5,6 @@ import (
 	"e-commence/app/product/biz/dal/mysql"
 	"e-commence/app/product/biz/model"
 	product "e-commence/rpc_gen/kitex_gen/product"
-	"fmt"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
 )
@@ -27,8 +26,6 @@ func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetPr
 	productQuery := model.NewProductQuery(s.ctx, mysql.DB)
 
 	p, err := productQuery.GetById(int64(req.Id))
-
-	fmt.Printf("\n\n%#v\n\n", p)
 
 	if err != nil {
 		return nil, err

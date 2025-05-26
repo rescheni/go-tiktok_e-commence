@@ -28,6 +28,7 @@ func WarpRespose(ctx context.Context, c *app.RequestContext, content map[string]
 
 	content["user_id"] = userId
 
+	// 获取购物车角标
 	if userId > 0 {
 		cartResp, err := rpc.CartClient.GetCart(ctx, &cart.GetCartReq{
 			UserId: uint64(frontendUtil.GetUserIdFromCtx(ctx)),

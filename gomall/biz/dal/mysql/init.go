@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"e-commence/gomall/biz/dal/model"
-	"fmt"
 	"os"
 
 	"gorm.io/driver/mysql"
@@ -29,5 +28,5 @@ func Init() {
 	if err != nil {
 		return
 	}
-	fmt.Printf("%#v\n", DB.Debug().Exec("SHOW TABLES"))
+	// fmt.Printf("%#v\n", DB.Debug().Exec("SHOW TABLES"))
 }
