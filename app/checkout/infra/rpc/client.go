@@ -1,6 +1,8 @@
 package rpc
 
 import (
+	"e-commence/app/checkout/conf"
+	"e-commence/common/clientsuite"
 	"e-commence/rpc_gen/kitex_gen/cart/cartservice"
 	"e-commence/rpc_gen/kitex_gen/order/orderservice"
 	"e-commence/rpc_gen/kitex_gen/payment/paymentservice"
@@ -8,10 +10,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/cloudwego/kitex/pkg/discovery"
-
 	"github.com/cloudwego/kitex/client"
-	consul "github.com/kitex-contrib/registry-consul"
 	"k8s.io/klog/v2"
 )
 
@@ -23,6 +22,10 @@ var (
 	once          sync.Once
 	err           error
 )
+var (
+	serverName   = conf.GetConf().Kitex.Service
+	registryAddr = os.Getenv(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
+)
 
 func InitClient() {
 	once.Do(func() {
@@ -33,21 +36,14 @@ func InitClient() {
 	})
 }
 
-func getConsulServer() discovery.Resolver {
-	r, err := consul.NewConsulResolver(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
-	if err != nil {
-		klog.Fatal("Error creating consul resolver")
-	}
-	return r
-}
-
 func iniCartClient() {
-
-	r := getConsulServer()
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	CartClient, err = cartservice.NewClient("cart", opts...)
-
 	if err != nil {
 		klog.Fatal("Error creating user client")
 	}
@@ -55,35 +51,40 @@ func iniCartClient() {
 
 func iniPaymentClient() {
 
-	r := getConsulServer()
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
-	PaymentClient, err = paymentservice.NewClient("payment", opts...)
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 
+	PaymentClient, err = paymentservice.NewClient("payment", opts...)
 	if err != nil {
 		klog.Fatal("Error creating user client")
 	}
 }
 
 func iniProductClient() {
-
-	r := getConsulServer()
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	ProductClient, err = productcatalogservice.NewClient("product", opts...)
-
 	if err != nil {
 		klog.Fatal("Error creating user client")
 	}
 }
 
 func iniOrderClient() {
-	r := getConsulServer()
-
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	OrderClient, err = orderservice.NewClient("order", opts...)
-
 	if err != nil {
 		klog.Fatal("Error creating user client")
 	}

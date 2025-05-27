@@ -2,6 +2,9 @@ package main
 
 import (
 	"e-commence/app/cart/biz/dal"
+	"e-commence/common/mtl"
+	"e-commence/common/serversuite"
+
 	"net"
 	"os"
 	"time"
@@ -11,13 +14,16 @@ import (
 	"e-commence/rpc_gen/kitex_gen/cart/cartservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+)
+
+var (
+	serverName   = conf.GetConf().Kitex.Service
+	registryAddr = os.Getenv(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
 )
 
 func main() {
@@ -28,8 +34,11 @@ func main() {
 		panic("err env load err")
 	}
 
-	dal.Init()
+	//
+	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
+	// ⬆️ 下面的两个有可能依赖于mtl
 
+	dal.Init()
 	rpc.Init()
 
 	opts := kitexInit()
@@ -48,20 +57,12 @@ func kitexInit() (opts []server.Option) {
 	if err != nil {
 		panic(err)
 	}
-	opts = append(opts, server.WithServiceAddr(addr))
-
-	// consul.init
-	r, err := consul.NewConsulRegister(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
-
-	if err != nil {
-		klog.Fatal("consul Init error ")
-	}
-
-	// service info
-	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
-		ServiceName: conf.GetConf().Kitex.Service,
-	}), server.WithRegistry(r))
-
+	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(
+		serversuite.CommonServerSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		},
+	))
 	// klog
 	logger := kitexlogrus.NewLogger()
 	klog.SetLogger(logger)

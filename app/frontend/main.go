@@ -4,12 +4,15 @@ package main
 
 import (
 	"context"
+	"e-commence/common/mtl"
 	"gomall/biz/router"
 	"gomall/conf"
 	"gomall/infra/rpc"
 	"gomall/middleware"
 	"os"
 	"time"
+
+	frontendUtils "gomall/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -21,10 +24,12 @@ import (
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/pprof"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/redis"
 	"github.com/joho/godotenv"
+
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -36,19 +41,23 @@ func main() {
 		hlog.Fatalf("Error loading .env file")
 	}
 
+	consul, regirstryInfo := mtl.IniMetric(frontendUtils.ServerName_Frontend, conf.GetConf().Hertz.MetricsPort, frontendUtils.RegistryAddr_Frontend)
+
+	defer consul.Deregister(regirstryInfo)
+
 	// init rpc
 	rpc.Init()
 	// init dal
 	// dal.Init()
 	address := conf.GetConf().Hertz.Address
-	h := server.New(server.WithHostPorts(address))
+	h := server.New(server.WithHostPorts(address),
+		server.WithTracer(
+			prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true),
+				prometheus.WithRegistry(mtl.Registry),
+			)),
+	)
 
 	registerMiddleware(h)
-
-	// add a ping route to test
-	// h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
-	// 	ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
-	// })
 
 	router.GeneratedRegister(h)
 	h.LoadHTMLGlob("templates/*")

@@ -20,9 +20,9 @@ message CheckoutReq {
     string province = 6[(api.form) = "province"] ;
     string country = 7[(api.form) = "country"];
     string city = 8[(api.form) = "city"];
-    string cart_num = 9[(api.form) = "cartNum"];
-    int32 expiration_mount = 10[(api.form) = "expirationMount"];
-    int32 expiratrion_Year = 11[(api.form) = "expirationYear"];
+    string card_num = 9[(api.form) = "cardNum"];
+    int32 expiration_month = 10[(api.form) = "expirationMonth"];
+    int32 expiration_Year = 11[(api.form) = "expirationYear"];
     int32 cvv = 12[(api.form) = "cvv"];
     string payment = 13[(api.form) = "payment"];
 }

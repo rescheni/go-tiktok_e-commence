@@ -33,6 +33,8 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		UserId: uint64(req.UserId),
 	})
 
+	// fmt.Println(req)
+
 	if err != nil {
 		return nil, kerrors.NewGRPCBizStatusError(50001, err.Error())
 	}
@@ -92,11 +94,17 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 	order_id := orderresp.Order.OrderId
 	payReq := &payment.ChargeReq{
-		UserId:     uint64(req.UserId),
-		OrderId:    order_id,
-		Amount:     uint32(Total),
-		CreditCard: req.CreditCard,
+		UserId:  uint64(req.UserId),
+		OrderId: order_id,
+		Amount:  uint32(Total),
+		CreditCard: &payment.CreditCardInfo{
+			CraditCardNumber:          req.CreditCard.CraditCardNumber,
+			CreditCardCvv:             req.CreditCard.CreditCardCvv,
+			CreditCardExpirationYear:  req.CreditCard.CreditCardExpirationYear,
+			CreditCardExpirationMount: req.CreditCard.CreditCardExpirationMount,
+		},
 	}
+
 	_, err = rpc.CartClient.EmptyCart(s.ctx, &cart.EmptyCartreq{
 		UserId: uint64(req.UserId),
 	})

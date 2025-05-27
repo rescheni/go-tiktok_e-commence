@@ -23,12 +23,16 @@ func NewChargeService(ctx context.Context) *ChargeService {
 // Run create note info
 func (s *ChargeService) Run(req *payment.ChargeReq) (resp *payment.ChargeResp, err error) {
 
+	// fmt.Println(req)
+
 	card := creditcard.Card{
 		Number: req.CreditCard.CraditCardNumber,
 		Cvv:    strconv.Itoa(int(req.CreditCard.CreditCardCvv)),
 		Month:  strconv.Itoa(int(req.CreditCard.CreditCardExpirationMount)),
 		Year:   strconv.Itoa(int(req.CreditCard.CreditCardExpirationYear)),
 	}
+	// fmt.Println()
+	// fmt.Println(card)
 
 	err = card.Validate(true)
 	if err != nil {

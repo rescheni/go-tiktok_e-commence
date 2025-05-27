@@ -1,20 +1,17 @@
 package rpc
 
 import (
+	"e-commence/common/clientsuite"
 	"e-commence/rpc_gen/kitex_gen/cart/cartservice"
 	"e-commence/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"e-commence/rpc_gen/kitex_gen/order/orderservice"
 	"e-commence/rpc_gen/kitex_gen/product/productcatalogservice"
 	"e-commence/rpc_gen/kitex_gen/user/userservice"
-	"os"
+	frontendUtils "gomall/utils"
 	"sync"
 
-	frontendUtil "gomall/utils"
-
 	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/discovery"
 	"github.com/cloudwego/kitex/pkg/klog"
-	consul "github.com/kitex-contrib/registry-consul"
 )
 
 var (
@@ -39,21 +36,19 @@ func Init() {
 	)
 }
 
-func consulInit() (discovery.Resolver, error) {
-	r, err := consul.NewConsulResolver(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
-	if err != nil {
-		klog.Fatal("Error creating consul resolver")
-	}
-	return r, err
-}
+var (
+	serverName   = frontendUtils.ServerName_Frontend
+	registryAddr = frontendUtils.RegistryAddr_Frontend
+	err          error
+)
 
 func iniUserClient() {
-	r, err := consulInit()
-	frontendUtil.MustHandleError(err)
-
-	var opts []client.Option
-
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 
 	UserClient, err = userservice.NewClient("user", opts...)
 
@@ -62,11 +57,12 @@ func iniUserClient() {
 	}
 }
 func iniProductClient() {
-	r, err := consulInit()
-	frontendUtil.MustHandleError(err)
-
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	ProductClient, err = productcatalogservice.NewClient("product", opts...)
 
 	if err != nil {
@@ -75,11 +71,12 @@ func iniProductClient() {
 }
 
 func iniCartClient() {
-	r, err := consulInit()
-	frontendUtil.MustHandleError(err)
-
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	CartClient, err = cartservice.NewClient("cart", opts...)
 
 	if err != nil {
@@ -88,11 +85,12 @@ func iniCartClient() {
 }
 
 func iniCheckoutClient() {
-	r, err := consulInit()
-	frontendUtil.MustHandleError(err)
-
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	CheckoutClient, err = checkoutservice.NewClient("checkout", opts...)
 
 	if err != nil {
@@ -101,11 +99,12 @@ func iniCheckoutClient() {
 }
 
 func iniOrderClient() {
-	r, err := consulInit()
-	frontendUtil.MustHandleError(err)
-
-	var opts []client.Option
-	opts = append(opts, client.WithResolver(r))
+	opts := []client.Option{
+		client.WithSuite(clientsuite.CommonClientSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		}),
+	}
 	OrderClient, err = orderservice.NewClient("order", opts...)
 
 	if err != nil {

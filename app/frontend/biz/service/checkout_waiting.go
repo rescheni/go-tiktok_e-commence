@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	rpcchenkout "e-commence/rpc_gen/kitex_gen/checkout"
 	"e-commence/rpc_gen/kitex_gen/payment"
@@ -25,7 +26,8 @@ func NewCheckoutWaitingService(Context context.Context, RequestContext *app.Requ
 func (h *CheckoutWaitingService) Run(req *checkout.CheckoutReq) (resp map[string]any, err error) {
 	user_id := frondendUtils.GetUserIdFromCtx(h.Context)
 
-	_, err = rpc.CheckoutClient.Checkout(h.Context, &rpcchenkout.CheckoutReq{
+	fmt.Println(req)
+	checkoutRpcReq := &rpcchenkout.CheckoutReq{
 		UserId:    uint32(user_id),
 		Firstname: req.Firstname,
 		Lastname:  req.Lastname,
@@ -38,12 +40,15 @@ func (h *CheckoutWaitingService) Run(req *checkout.CheckoutReq) (resp map[string
 			State:         req.Province,
 		},
 		CreditCard: &payment.CreditCardInfo{
-			CraditCardNumber:          req.CartNum,
+			CraditCardNumber:          req.CardNum,
 			CreditCardCvv:             req.Cvv,
-			CreditCardExpirationYear:  req.Expiratrion_Year,
-			CreditCardExpirationMount: req.ExpirationMount,
+			CreditCardExpirationYear:  req.Expiration_Year,
+			CreditCardExpirationMount: req.ExpirationMonth,
 		},
-	})
+	}
+	fmt.Println()
+	fmt.Println(checkoutRpcReq.CreditCard)
+	_, err = rpc.CheckoutClient.Checkout(h.Context, checkoutRpcReq)
 
 	if err != nil {
 		return nil, err

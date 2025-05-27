@@ -2,20 +2,26 @@ package main
 
 import (
 	"net"
+	"os"
 	"time"
 
 	"e-commence/app/user/biz/dal"
 	"e-commence/app/user/conf"
+	"e-commence/common/mtl"
+	"e-commence/common/serversuite"
 	"e-commence/rpc_gen/kitex_gen/user/userservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+)
+
+var (
+	serverName   = conf.GetConf().Kitex.Service
+	registryAddr = os.Getenv(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))
 )
 
 func main() {
@@ -26,6 +32,7 @@ func main() {
 		klog.Fatal("Error loading .env file")
 	}
 
+	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
 	// init dal
 	dal.Init()
 
@@ -45,20 +52,12 @@ func kitexInit() (opts []server.Option) {
 	if err != nil {
 		panic(err)
 	}
-	opts = append(opts, server.WithServiceAddr(addr))
-
-	// service info
-	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
-		ServiceName: conf.GetConf().Kitex.Service,
-	}))
-
-	// consul
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
-
-	if err != nil {
-		klog.Fatal(err)
-	}
-	opts = append(opts, server.WithRegistry(r))
+	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(
+		serversuite.CommonServerSuite{
+			CurrentServiceName: serverName,
+			RegistryAddr:       registryAddr,
+		},
+	))
 
 	// klog
 	logger := kitexlogrus.NewLogger()
