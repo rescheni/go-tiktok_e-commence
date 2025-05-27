@@ -8,6 +8,7 @@ import (
 	"e-commence/app/checkout/biz/dal"
 	"e-commence/app/checkout/conf"
 	"e-commence/app/checkout/infra/rpc"
+	"e-commence/app/email/infra/mq"
 	"e-commence/rpc_gen/kitex_gen/checkout/checkoutservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -27,6 +28,7 @@ func main() {
 		panic(err)
 	}
 
+	mq.Init()
 	rpc.InitClient()
 	dal.Init()
 

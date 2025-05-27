@@ -3,15 +3,19 @@ package service
 import (
 	"context"
 	"e-commence/app/checkout/infra/rpc"
+	"e-commence/app/email/infra/mq"
 	"e-commence/rpc_gen/kitex_gen/cart"
 	checkout "e-commence/rpc_gen/kitex_gen/checkout"
+	"e-commence/rpc_gen/kitex_gen/email"
 	"e-commence/rpc_gen/kitex_gen/order"
 	"e-commence/rpc_gen/kitex_gen/payment"
 	"e-commence/rpc_gen/kitex_gen/product"
 	"strconv"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
-	"k8s.io/klog/v2"
+	"github.com/nats-io/nats.go"
+	"google.golang.org/protobuf/proto"
+	"k8s.io/klog"
 )
 
 type CheckoutService struct {
@@ -100,10 +104,26 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		return nil, kerrors.NewGRPCBizStatusError(50050, err.Error())
 	}
 	paymentResult, err := rpc.PaymentClient.Charge(s.ctx, payReq)
-
 	if err != nil {
 		return nil, err
 	}
+	data, err := proto.Marshal(&email.EmailReq{
+		From:        "from@example",
+		To:          req.Email,
+		ContentType: "text/plain",
+		Subject:     "you have just create an Order on gomall",
+		Content:     "you have just create an Order on gomall",
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	msg := &nats.Msg{
+		Subject: "email",
+		Data:    data,
+	}
+	_ = mq.Nc.PublishMsg(msg)
+
 	klog.Info(paymentResult)
 
 	return &checkout.CheckoutResp{

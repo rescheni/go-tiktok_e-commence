@@ -45,6 +45,8 @@ help:
 	@echo "  	make gen-rpc-order-client      		# 生成订单服务代码-客户端"
 	@echo "  	make gen-rpc-order-server      		# 生成订单服务代码-服务端"
 
+	@echo "  	make gen-rpc-email-client      		# 生成订单服务代码-客户端"
+	@echo "  	make gen-rpc-email-server      		# 生成订单服务代码-服务端"
 
 
 # 热启动测试运行
@@ -179,3 +181,19 @@ gen-rpc-order-client:
 .PHONY: gen-rpc-order-server
 gen-rpc-order-server:
 	@cd app/order && cwgo server --type RPC --service order --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl/service --idl ../../idl/service/order.proto
+
+
+
+# 邮件服务
+.PHONY: run-rpc-email
+run-rpc-email:
+	@cd app/email  && go run .
+
+.PHONY: gen-rpc-email-client 
+gen-rpc-email-client:
+	@cd rpc_gen && cwgo client --type RPC --service email --module e-commence -I ../idl/service --idl ../idl/service/email.proto	
+
+.PHONY: gen-rpc-email-server
+gen-rpc-email-server:
+	@cd app/email && cwgo server --type RPC --service email --module e-commence --pass "-use e-commence/rpc_gen/kitex_gen"  -I ../../idl/service --idl ../../idl/service/email.proto
+

@@ -102,6 +102,12 @@
       </div>
     </nav>
     <!-- end-nvrbar  -->
+        {{ if .error }}
+            <div class="alert alert-danger text-center" role="alert">{{ .error }}</div>
+         {{ end }}
+        {{ if .warning }}
+            <div class="alert alert-warning text-center" role="alert">{{ .warning }}</div>
+        {{ end }}
   </header>
   <!-- header -->
   <main class="min-vh-100">
