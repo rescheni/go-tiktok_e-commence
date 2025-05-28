@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"e-commence/common/mtl"
+	"fmt"
 	"gomall/biz/router"
 	"gomall/conf"
 	"gomall/infra/rpc"
@@ -34,14 +35,27 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+var (
+	serverName  = frontendUtils.ServerName_Frontend
+	metricsPort = conf.GetConf().Hertz.MetricsPort
+)
+
 func main() {
 	// 加载环境变量
 	err := godotenv.Load()
 	if err != nil {
 		hlog.Fatalf("Error loading .env file")
 	}
+	frontendUtils.RegistryAddr_Frontend = os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT")
+	regirstryAddr := frontendUtils.RegistryAddr_Frontend
 
-	consul, regirstryInfo := mtl.IniMetric(frontendUtils.ServerName_Frontend, conf.GetConf().Hertz.MetricsPort, frontendUtils.RegistryAddr_Frontend)
+	fmt.Println("-----------------------------")
+	fmt.Println(serverName)
+	fmt.Println(metricsPort)
+	fmt.Println(regirstryAddr)
+	fmt.Println("-----------------------------")
+
+	consul, regirstryInfo := mtl.IniMetric(serverName, metricsPort, regirstryAddr)
 
 	defer consul.Deregister(regirstryInfo)
 

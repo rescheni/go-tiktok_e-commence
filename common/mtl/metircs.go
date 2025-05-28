@@ -39,7 +39,7 @@ func IniMetric(serviceName, metricsPort, regirstryAddr string) (registry.Registr
 
 	})
 	// Prometheus 的 HTTP handler 负责 在你的服务中暴露 /metrics 接口。
-	http.Handle("/metrices", promhttp.HandlerFor(Registry, promhttp.HandlerOpts{}))
+	http.Handle("/metrics", promhttp.HandlerFor(Registry, promhttp.HandlerOpts{}))
 
 	go http.ListenAndServe(metricsPort, nil)
 
