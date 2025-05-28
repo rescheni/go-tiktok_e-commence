@@ -6,6 +6,7 @@ import (
 	"github.com/cloudwego/kitex/client"
 
 	"github.com/cloudwego/kitex/transport"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	consul "github.com/kitex-contrib/registry-consul"
 	"k8s.io/klog"
 
@@ -27,6 +28,7 @@ func (s CommonClientSuite) Options() []client.Option {
 		}),
 		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
 		client.WithTransportProtocol(transport.GRPC),
+		client.WithSuite(tracing.NewClientSuite()),
 	}
 
 	r, err := consul.NewConsulResolver(os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT"))

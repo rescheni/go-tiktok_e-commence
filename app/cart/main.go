@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"e-commence/app/cart/biz/dal"
 	"e-commence/common/mtl"
 	"e-commence/common/serversuite"
@@ -36,6 +37,8 @@ func main() {
 
 	//
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
+	d := mtl.InitTracing(serverName)
+	defer d.Shutdown(context.Background())
 	// ⬆️ 下面的两个有可能依赖于mtl
 
 	dal.Init()

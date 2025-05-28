@@ -8,6 +8,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/server"
 	prometheus "github.com/kitex-contrib/monitor-prometheus"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	consul "github.com/kitex-contrib/registry-consul"
 	"k8s.io/klog"
 )
@@ -25,6 +26,8 @@ func (s CommonServerSuite) Options() []server.Option {
 			ServiceName: s.CurrentServiceName,
 		}),
 		server.WithTracer(prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true), prometheus.WithRegistry(mtl.Registry))),
+
+		server.WithSuite(tracing.NewServerSuite()),
 	}
 
 	// consul.init

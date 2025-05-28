@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/plugin/opentelemetry/tracing"
 	"k8s.io/klog/v2"
 )
 
@@ -32,5 +33,9 @@ func Init() {
 	)
 	if err != nil {
 		klog.Error(err)
+	}
+
+	if err := DB.Use(tracing.NewPlugin(tracing.WithoutMetrics())); err != nil {
+		panic(err)
 	}
 }

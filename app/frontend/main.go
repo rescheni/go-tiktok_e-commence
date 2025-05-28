@@ -31,6 +31,7 @@ import (
 	"github.com/hertz-contrib/sessions/redis"
 	"github.com/joho/godotenv"
 
+	hertztracing "github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -64,13 +65,18 @@ func main() {
 	// init dal
 	// dal.Init()
 	address := conf.GetConf().Hertz.Address
+
+	tracer, cfg := hertztracing.NewServerTracer()
+
 	h := server.New(server.WithHostPorts(address),
 		server.WithTracer(
 			prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true),
 				prometheus.WithRegistry(mtl.Registry),
 			)),
+		tracer,
 	)
 
+	h.Use(hertztracing.ServerMiddleware(cfg))
 	registerMiddleware(h)
 
 	router.GeneratedRegister(h)

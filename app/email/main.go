@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net"
 	"os"
 	"time"
@@ -33,6 +34,8 @@ func main() {
 		panic("err Load Env Error")
 	}
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
+	d := mtl.InitTracing(serverName)
+	defer d.Shutdown(context.Background())
 	dal.Init()
 	mq.Init()
 	consumer.Init()

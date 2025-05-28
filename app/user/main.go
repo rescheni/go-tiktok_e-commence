@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net"
 	"os"
 	"time"
@@ -33,6 +34,9 @@ func main() {
 	}
 
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
+
+	d := mtl.InitTracing(serverName)
+	defer d.Shutdown(context.Background())
 	// init dal
 	dal.Init()
 
