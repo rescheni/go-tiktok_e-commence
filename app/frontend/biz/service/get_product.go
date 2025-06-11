@@ -5,8 +5,8 @@ import (
 
 	rpcproduct "e-commence/rpc_gen/kitex_gen/product"
 
-	product "gomall/hertz_gen/frontend/product"
-	"gomall/infra/rpc"
+	product "e-commence/app/frontend/hertz_gen/frontend/product"
+	"e-commence/app/frontend/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"

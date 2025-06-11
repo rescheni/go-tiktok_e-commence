@@ -1,18 +1,12 @@
 services:
-  mysql:
-    image: 'mysql:latest'
-    ports:
-      - ${GOMALL_MYSQL_PORT}:3306
-    environment:
-      - MYSQL_DATABASE=${GOMALL_MYSQL_DATABASE}
-      - MYSQL_USER=${GOMALL_MYSQL_USER}
-      - MYSQL_PASSWORD=${GOMALL_MYSQL_PASSWORD}
-      - MYSQL_RANDOM_ROOT_PASSWORD= "yes"
-  redis:
-    image: 'redis:latest'
-    ports:
-      - ${GOMALL_REDIS_PORT}:6379
-  consul:
-    image: 'hashicorp/consul'
-    ports:
-      - ${GOMALL_CONSUL_PORT}:8500
+  gomall-product:
+    image: 'gomall-product:latest'
+    env_file:
+      - .env
+    volumes:  
+      - ./conf:/opt/gomall/product/conf:ro
+    networks:
+      - go-tiktok_e-commence_gomall-network
+networks:
+  go-tiktok_e-commence_gomall-network:                
+      external: true

@@ -29,7 +29,6 @@ func Init() {
 	DB.AutoMigrate(
 		&model.Cart{},
 	)
-
 	if err := DB.Use(tracing.NewPlugin(tracing.WithoutMetrics())); err != nil {
 		panic(err)
 	}

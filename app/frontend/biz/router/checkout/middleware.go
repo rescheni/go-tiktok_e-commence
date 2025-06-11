@@ -3,7 +3,7 @@
 package checkout
 
 import (
-	"gomall/middleware"
+	"e-commence/app/frontend/middleware"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )

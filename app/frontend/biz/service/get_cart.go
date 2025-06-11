@@ -6,9 +6,9 @@ import (
 	"e-commence/rpc_gen/kitex_gen/product"
 	"strconv"
 
-	common "gomall/hertz_gen/frontend/common"
-	"gomall/infra/rpc"
-	frontendUtils "gomall/utils"
+	common "e-commence/app/frontend/hertz_gen/frontend/common"
+	"e-commence/app/frontend/infra/rpc"
+	frontendUtils "e-commence/app/frontend/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"

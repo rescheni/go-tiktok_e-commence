@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"os"
 	"time"
@@ -29,10 +30,10 @@ var (
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
+	_ = godotenv.Load()
+
+	fmt.Println("Starting Checkout Service...")
+	fmt.Println(os.Getenv("GOMALL_NATS_URL") + ":" + os.Getenv("GOMALL_NATS_SERVER_PORT"))
 
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
 	d := mtl.InitTracing(serverName)
@@ -46,7 +47,7 @@ func main() {
 
 	svr := checkoutservice.NewServer(new(CheckoutServiceImpl), opts...)
 
-	err = svr.Run()
+	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}

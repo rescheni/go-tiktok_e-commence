@@ -4,7 +4,7 @@ package order
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	order "gomall/biz/handler/order"
+	order "e-commence/app/frontend/biz/handler/order"
 )
 
 /*

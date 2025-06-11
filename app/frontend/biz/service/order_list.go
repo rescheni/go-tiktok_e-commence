@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"time"
 
+	types "e-commence/app/frontend/biz/types"
+	common "e-commence/app/frontend/hertz_gen/frontend/common"
+	"e-commence/app/frontend/infra/rpc"
+	frontendUtils "e-commence/app/frontend/utils"
 	"e-commence/rpc_gen/kitex_gen/order"
 	"e-commence/rpc_gen/kitex_gen/product"
-	types "gomall/biz/types"
-	common "gomall/hertz_gen/frontend/common"
-	"gomall/infra/rpc"
-	frontendUtils "gomall/utils"
 
 	"github.com/cloudwego/hertz/pkg/common/utils"
 

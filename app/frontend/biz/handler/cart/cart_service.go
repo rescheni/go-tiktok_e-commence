@@ -3,10 +3,10 @@ package cart
 import (
 	"context"
 
-	"gomall/biz/service"
-	"gomall/biz/utils"
-	cart "gomall/hertz_gen/frontend/cart"
-	common "gomall/hertz_gen/frontend/common"
+	"e-commence/app/frontend/biz/service"
+	"e-commence/app/frontend/biz/utils"
+	cart "e-commence/app/frontend/hertz_gen/frontend/cart"
+	common "e-commence/app/frontend/hertz_gen/frontend/common"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"

@@ -1,5 +1,10 @@
 # Makefile for GoMall
 
+
+SVN ?= frontend
+V ?= latest
+
+
 .PHONY: /dev/null
 /dev/null: makefile
 	@make help
@@ -47,6 +52,12 @@ help:
 
 	@echo "  	make gen-rpc-email-client      		# 生成订单服务代码-客户端"
 	@echo "  	make gen-rpc-email-server      		# 生成订单服务代码-服务端"
+
+
+# docker image build 
+.PHONY: build
+build:
+	@docker build --build-arg  service_name=$(SVN) -f app/$(SVN)/Dockerfile -t gomall-$(SVN):$(V)  . 
 
 
 # 热启动测试运行

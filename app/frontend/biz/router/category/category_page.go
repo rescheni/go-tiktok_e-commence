@@ -4,7 +4,7 @@ package category
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	category "gomall/biz/handler/category"
+	category "e-commence/app/frontend/biz/handler/category"
 )
 
 /*

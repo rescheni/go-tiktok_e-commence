@@ -2,9 +2,9 @@ package utils
 
 import (
 	"context"
+	"e-commence/app/frontend/infra/rpc"
+	frontendUtil "e-commence/app/frontend/utils"
 	"e-commence/rpc_gen/kitex_gen/cart"
-	"gomall/infra/rpc"
-	frontendUtil "gomall/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )

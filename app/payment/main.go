@@ -27,11 +27,7 @@ var (
 
 func main() {
 
-	err := godotenv.Load()
-
-	if err != nil {
-		panic(".env null load")
-	}
+	_ = godotenv.Load()
 
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
 	d := mtl.InitTracing(serverName)
@@ -42,7 +38,7 @@ func main() {
 
 	svr := paymentservice.NewServer(new(PaymentServiceImpl), opts...)
 
-	err = svr.Run()
+	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}

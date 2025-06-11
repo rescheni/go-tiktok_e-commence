@@ -3,7 +3,7 @@ package middleware
 import (
 	"context"
 
-	frontendUtil "gomall/utils"
+	frontendUtil "e-commence/app/frontend/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/sessions"

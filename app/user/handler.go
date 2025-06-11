@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"e-commence/app/user/biz/service"
-	user "e-commence/rpc_gen/kitex_gen/user"
+	"e-commence/rpc_gen/kitex_gen/user"
 )
 
 // UserServiceImpl implements the last service interface defined in the IDL.

@@ -3,10 +3,10 @@ package checkout
 import (
 	"context"
 
-	"gomall/biz/service"
-	"gomall/biz/utils"
-	checkout "gomall/hertz_gen/frontend/checkout"
-	common "gomall/hertz_gen/frontend/common"
+	"e-commence/app/frontend/biz/service"
+	"e-commence/app/frontend/biz/utils"
+	checkout "e-commence/app/frontend/hertz_gen/frontend/checkout"
+	common "e-commence/app/frontend/hertz_gen/frontend/common"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"

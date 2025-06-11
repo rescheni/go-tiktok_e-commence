@@ -5,8 +5,8 @@ import (
 	"e-commence/rpc_gen/kitex_gen/user"
 	"fmt"
 
-	auth "gomall/hertz_gen/frontend/auth"
-	"gomall/infra/rpc"
+	auth "e-commence/app/frontend/hertz_gen/frontend/auth"
+	"e-commence/app/frontend/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/hertz-contrib/sessions"

@@ -1,4 +1,5 @@
 services:
+
   mysql:
     image: 'mysql:latest'
     ports:
@@ -8,20 +9,32 @@ services:
       - MYSQL_ROOT_PASSWORD=${GOMALL_MYSQL_PASSWORD}
       - MYSQL_USER=${GOMALL_MYSQL_USER}
       - MYSQL_PASSWORD=${GOMALL_MYSQL_PASSWORD}
+    networks:
+      - gomall-network
+ 
   redis:
     image: 'redis:latest'
     ports:
       - ${GOMALL_REDIS_PORT}:6379
+    networks:
+      - gomall-network
+ 
   consul:
     image: 'hashicorp/consul'
     ports:
       - ${GOMALL_CONSUL_PORT}:8500
+    networks:
+      - gomall-network
+ 
   
   nats:
     image: nats:latest  
     ports:
       -  ${GOMALL_NATS_SERVER_PORT}:4222
       -  ${GOMALL_NATS_WEB_PORT}:8222
+    networks:
+      - gomall-network
+ 
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -30,7 +43,9 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
-
+    networks:
+      - gomall-network
+ 
   grafana:
     image: grafana/grafana:latest
     environment:
@@ -39,3 +54,48 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+    networks:
+      - gomall-network
+ 
+    # Jaeger
+  jaeger-all-in-one:
+    container_name: jaeger-all-in-one
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - gomall-network
+ 
+  
+  loki:
+    image: grafana/loki:2.9.2
+    volumes:
+      - ./deploy/config/loki.yml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - gomall-network
+ 
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    volumes:
+      - ./deploy/config/promtail.yml:/etc/promtail/config.yml
+      - ./app/frontend/log:/logs/frontend
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - gomall-network
+ 
+networks:
+  gomall-network:                # 网络名称
+    driver: bridge    # 网络驱动类型，使用标准的 bridge 模式
+    ipam:            # IP Address Management (IP地址管理)
+      driver: default # 使用默认的 IPAM 驱动
+      config:        # IPAM 配置
+        - subnet: 172.20.0.0/16    # 子网配置，CIDR格式
+          gateway: 172.20.0.1      # 网关地址
+    driver_opts:     # 驱动程序特定选项
+      com.docker.network.bridge.name: media_net  # 设置bridge名称

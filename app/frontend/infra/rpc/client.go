@@ -1,13 +1,13 @@
 package rpc
 
 import (
+	frontendUtils "e-commence/app/frontend/utils"
 	"e-commence/common/clientsuite"
 	"e-commence/rpc_gen/kitex_gen/cart/cartservice"
 	"e-commence/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"e-commence/rpc_gen/kitex_gen/order/orderservice"
 	"e-commence/rpc_gen/kitex_gen/product/productcatalogservice"
 	"e-commence/rpc_gen/kitex_gen/user/userservice"
-	frontendUtils "gomall/utils"
 	"sync"
 
 	"github.com/cloudwego/kitex/client"
@@ -43,6 +43,7 @@ var (
 )
 
 func iniUserClient() {
+
 	opts := []client.Option{
 		client.WithSuite(clientsuite.CommonClientSuite{
 			CurrentServiceName: serverName,

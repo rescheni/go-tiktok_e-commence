@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	checkout "e-commence/app/frontend/hertz_gen/frontend/checkout"
+	"e-commence/app/frontend/infra/rpc"
+	frondendUtils "e-commence/app/frontend/utils"
 	rpcchenkout "e-commence/rpc_gen/kitex_gen/checkout"
 	"e-commence/rpc_gen/kitex_gen/payment"
-	checkout "gomall/hertz_gen/frontend/checkout"
-	"gomall/infra/rpc"
-	frondendUtils "gomall/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"

@@ -28,13 +28,9 @@ var (
 func main() {
 
 	// 加载环境变量
-	err := godotenv.Load()
-	if err != nil {
-		klog.Fatal("Error loading .env file")
-	}
+	_ = godotenv.Load()
 
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
-
 	d := mtl.InitTracing(serverName)
 	defer d.Shutdown(context.Background())
 	// init dal
@@ -44,7 +40,7 @@ func main() {
 
 	svr := userservice.NewServer(new(UserServiceImpl), opts...)
 
-	err = svr.Run()
+	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}

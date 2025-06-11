@@ -4,7 +4,7 @@ package home
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	home "gomall/biz/handler/home"
+	home "e-commence/app/frontend/biz/handler/home"
 )
 
 /*

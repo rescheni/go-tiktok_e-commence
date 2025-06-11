@@ -1,6 +1,10 @@
 package mq
 
-import "github.com/nats-io/nats.go"
+import (
+	"os"
+
+	"github.com/nats-io/nats.go"
+)
 
 var (
 	Nc  *nats.Conn
@@ -8,8 +12,9 @@ var (
 )
 
 func Init() {
-	Nc, err = nats.Connect(nats.DefaultURL)
+
+	Nc, err = nats.Connect("nats://" + os.Getenv("GOMALL_NATS_URL") + ":" + os.Getenv("GOMALL_NATS_SERVER_PORT"))
 	if err != nil {
-		panic("Nats connect error")
+		panic("Nats connect error" + err.Error())
 	}
 }

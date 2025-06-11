@@ -29,11 +29,7 @@ var (
 
 func main() {
 
-	err := godotenv.Load()
-
-	if err != nil {
-		panic("err env load err")
-	}
+	_ = godotenv.Load()
 
 	//
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
@@ -48,7 +44,7 @@ func main() {
 
 	svr := cartservice.NewServer(new(CartServiceImpl), opts...)
 
-	err = svr.Run()
+	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}

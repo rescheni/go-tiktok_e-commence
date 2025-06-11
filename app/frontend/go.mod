@@ -1,8 +1,11 @@
-module gomall
+module e-commence/app/frontend
 
 go 1.24.2
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
+
+// replace e-commence/common => ../../common
+// replace e-commence/rpc_gen => ../../rpc_gen
 
 require (
 	github.com/cloudwego/hertz v0.10.0
@@ -10,8 +13,8 @@ require (
 	github.com/hertz-contrib/cors v0.1.0
 	github.com/hertz-contrib/gzip v0.0.3
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97
-	github.com/hertz-contrib/logger/logrus v1.0.1
 	github.com/hertz-contrib/monitor-prometheus v0.1.3
+	github.com/hertz-contrib/obs-opentelemetry/logging/logrus v0.1.1
 	github.com/hertz-contrib/obs-opentelemetry/tracing v0.4.1
 	github.com/hertz-contrib/pprof v0.1.2
 	github.com/hertz-contrib/sessions v1.0.3
@@ -100,6 +103,7 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.opentelemetry.io/contrib/propagators/ot v1.25.0 // indirect
 	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.32.0 // indirect
@@ -111,8 +115,9 @@ require (
 	golang.org/x/sync v0.9.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
-	google.golang.org/genproto v0.0.0-20230803162519-f966b187b2e5 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
+	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
+	google.golang.org/grpc v1.63.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/clickhouse v0.6.1 // indirect
 	gorm.io/driver/postgres v1.5.11 // indirect

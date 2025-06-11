@@ -7,8 +7,8 @@
 package product
 
 import (
-	_ "gomall/hertz_gen/api"
-	common "gomall/hertz_gen/frontend/common"
+	_ "e-commence/app/frontend/hertz_gen/api"
+	common "e-commence/app/frontend/hertz_gen/frontend/common"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

@@ -3,9 +3,9 @@ package product
 import (
 	"context"
 
-	"gomall/biz/service"
-	"gomall/biz/utils"
-	product "gomall/hertz_gen/frontend/product"
+	"e-commence/app/frontend/biz/service"
+	"e-commence/app/frontend/biz/utils"
+	product "e-commence/app/frontend/hertz_gen/frontend/product"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"

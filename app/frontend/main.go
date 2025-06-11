@@ -4,16 +4,17 @@ package main
 
 import (
 	"context"
+	"e-commence/app/frontend/biz/router"
+	"e-commence/app/frontend/conf"
+	"e-commence/app/frontend/infra/rpc"
+	"e-commence/app/frontend/middleware"
 	"e-commence/common/mtl"
 	"fmt"
-	"gomall/biz/router"
-	"gomall/conf"
-	"gomall/infra/rpc"
-	"gomall/middleware"
+
 	"os"
 	"time"
 
-	frontendUtils "gomall/utils"
+	frontendUtils "e-commence/app/frontend/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -24,8 +25,10 @@ import (
 	"github.com/hertz-contrib/cors"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
-	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+
+	// hertzlogrus "github.com/hertz-contrib/logger/logrus"
 	prometheus "github.com/hertz-contrib/monitor-prometheus"
+	hertzobslogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/hertz-contrib/pprof"
 	"github.com/hertz-contrib/sessions"
 	"github.com/hertz-contrib/sessions/redis"
@@ -43,12 +46,12 @@ var (
 
 func main() {
 	// 加载环境变量
-	err := godotenv.Load()
-	if err != nil {
-		hlog.Fatalf("Error loading .env file")
-	}
+	_ = godotenv.Load()
 	frontendUtils.RegistryAddr_Frontend = os.Getenv("GOMALL_CONSUL_URL") + ":" + os.Getenv("GOMALL_CONSUL_PORT")
 	regirstryAddr := frontendUtils.RegistryAddr_Frontend
+
+	d := mtl.InitTracing(serverName)
+	defer d.Shutdown(context.Background())
 
 	fmt.Println("-----------------------------")
 	fmt.Println(serverName)
@@ -67,8 +70,10 @@ func main() {
 	address := conf.GetConf().Hertz.Address
 
 	tracer, cfg := hertztracing.NewServerTracer()
+	h := server.Default(tracer)
+	h.Use(hertztracing.ServerMiddleware(cfg))
 
-	h := server.New(server.WithHostPorts(address),
+	h = server.New(server.WithHostPorts(address),
 		server.WithTracer(
 			prometheus.NewServerTracer("", "", prometheus.WithDisableServer(true),
 				prometheus.WithRegistry(mtl.Registry),
@@ -84,6 +89,7 @@ func main() {
 
 	// about
 	h.GET("/about", func(c context.Context, ctx *app.RequestContext) {
+		hlog.CtxInfof(c, "cloudwego shop about page")
 		ctx.HTML(consts.StatusOK, "about", utils.H{
 			"Title": "关于我们",
 			"Icon":  "https://api.paugram.com/wallpaper/",
@@ -116,9 +122,19 @@ func registerMiddleware(h *server.Hertz) {
 	h.Use(sessions.New("gomall", store))
 
 	// log
-	logger := hertzlogrus.NewLogger()
+	logger := hertzobslogrus.NewLogger(hertzobslogrus.WithLogger(hertzobslogrus.NewLogger().Logger()))
+	// logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
 	hlog.SetLevel(conf.LogLevel())
+
+	var flushInterval time.Duration
+
+	if os.Getenv("GO_ENV") == "online" {
+		flushInterval = time.Minute
+	} else {
+		flushInterval = time.Second
+	}
+
 	asyncWriter := &zapcore.BufferedWriteSyncer{
 		WS: zapcore.AddSync(&lumberjack.Logger{
 			Filename:   conf.GetConf().Hertz.LogFileName,
@@ -126,7 +142,7 @@ func registerMiddleware(h *server.Hertz) {
 			MaxBackups: conf.GetConf().Hertz.LogMaxBackups,
 			MaxAge:     conf.GetConf().Hertz.LogMaxAge,
 		}),
-		FlushInterval: time.Minute,
+		FlushInterval: flushInterval,
 	}
 	hlog.SetOutput(asyncWriter)
 	h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {

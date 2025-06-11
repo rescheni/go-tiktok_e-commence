@@ -4,7 +4,7 @@ package auth
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	auth "gomall/biz/handler/auth"
+	auth "e-commence/app/frontend/biz/handler/auth"
 )
 
 /*

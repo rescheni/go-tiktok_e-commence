@@ -29,10 +29,8 @@ var (
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		panic("err Load Env Error")
-	}
+	_ = godotenv.Load()
+
 	mtl.IniMetric(serverName, conf.GetConf().Kitex.MetricsPort, registryAddr)
 	d := mtl.InitTracing(serverName)
 	defer d.Shutdown(context.Background())
@@ -44,7 +42,7 @@ func main() {
 
 	svr := emailservice.NewServer(new(EmailServiceImpl), opts...)
 
-	err = svr.Run()
+	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}

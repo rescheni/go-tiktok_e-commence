@@ -1,6 +1,6 @@
 hertz:
   service: "frontend"
-  address: ":8080"
+  address: "0.0.0.0:8081"
   metrics_port: "8090"
   enable_pprof: false
   enable_gzip: true

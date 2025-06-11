@@ -3,8 +3,9 @@ package redis
 import (
 	"context"
 
+	"e-commence/app/frontend/conf"
+
 	"github.com/redis/go-redis/v9"
-	"gomall/conf"
 )
 
 var RedisClient *redis.Client

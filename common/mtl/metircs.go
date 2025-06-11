@@ -1,8 +1,10 @@
 package mtl
 
 import (
+	"fmt"
 	"net"
 	"net/http"
+	"os"
 
 	"github.com/cloudwego/kitex/pkg/registry"
 	"github.com/cloudwego/kitex/server"
@@ -22,10 +24,15 @@ func IniMetric(serviceName, metricsPort, regirstryAddr string) (registry.Registr
 	Registry.MustRegister(collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
 
 	r, _ := consul.NewConsulRegister(regirstryAddr)
-
-	addr, _ := net.ResolveTCPAddr("tcp", metricsPort)
+	hostname, _ := os.Hostname()
+	port := metricsPort
+	if len(port) > 0 && port[0] == ':' {
+		port = port[1:]
+	}
+	addr, _ := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%s", hostname, port))
 	regirstryInfo := &registry.Info{
-		ServiceName: "prometheus",
+		// ServiceName: "prometheus",
+		ServiceName: serviceName,
 		Addr:        addr,
 		Weight:      1,
 		Tags: map[string]string{

@@ -1,13 +1,14 @@
 package main
 
 import (
-	"e-commence/gomall/biz/dal/mysql"
 	"log"
 	"net"
 	"time"
 
+	"e-commence/gomall/biz/dal/mysql"
 	"e-commence/gomall/conf"
 	"e-commence/gomall/kitex_gen/user/userservice"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"

@@ -4,8 +4,8 @@ import (
 	"context"
 	"e-commence/rpc_gen/kitex_gen/product"
 
-	category "gomall/hertz_gen/frontend/category"
-	"gomall/infra/rpc"
+	category "e-commence/app/frontend/hertz_gen/frontend/category"
+	"e-commence/app/frontend/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/utils"

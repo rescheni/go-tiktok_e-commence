@@ -30,7 +30,9 @@ func ConsumerInit() {
 		ctx := context.Background()
 		ctx = otel.GetTextMapPropagator().Extract(ctx, propagation.HeaderCarrier(msg.Header))
 
-		_, span := tracer.Start(ctx, "shop-email-consumer")
+		_, span := tracer.Start(ctx, "shop-nats-consumer")
+
+		defer span.End()
 
 		noopEmail := notify.NewNoopEmail()
 		_ = noopEmail.Send(&req)

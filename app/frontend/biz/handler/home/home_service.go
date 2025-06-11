@@ -3,9 +3,9 @@ package home
 import (
 	"context"
 
-	"gomall/biz/service"
-	"gomall/biz/utils"
-	common "gomall/hertz_gen/frontend/common"
+	"e-commence/app/frontend/biz/service"
+	"e-commence/app/frontend/biz/utils"
+	common "e-commence/app/frontend/hertz_gen/frontend/common"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
